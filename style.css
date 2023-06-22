@@ -62,6 +62,7 @@
 
 a {
   text-decoration: none;
+  color:#fff;
 }
 
 img {
@@ -74,9 +75,8 @@ body {
 }
 
 nav {
-  background: #0d213f;
   padding: 1rem;
-  position: sticky;
+  position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
