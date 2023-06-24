@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="user-signup-style.css" />
+    <title>Web Design Mastery | Pathway</title>
+  </head>
+  <body>
+    <nav>
+      <div class="nav__logo">VanGo</div>
+      <ul class="nav__links">
+        <li class="link"><a href="index.html">Home</a></li>
+        <li class="link"><a href="#">About</a></li>
+        <li class="link"><a href="#">Rent-A-Van</a></li>
+        <li class="link"><a href="#">Be-A-Driver</a></li>
+      </ul>
+      <button class="btn"><a href="user-signup.html">Sign in</a></button>
+    </nav>
+    <header>
+      <div class="section__container header__container">
+        <div class="header__content">
+          <div class="header__details">
+            <h1>Van on the go! 
+                Anytime, anywhere, wherever.</h1>
+            <p class="section__subtitle">
+              Make your trip in just a click. We are the best van rental service
+              here in the Philippines. We provide cheap, fast, and reliable vans
+              as we support local van owners by giving them a platform to rent their vans! 
+            </p>
+          </div>
+        </div>
+        
+          <div class="form">
+            <h2>Sign in</h2>
+            <form action="php/signin.php" method="POST">
+              <input type="email" name="email" placeholder="Enter Email Here">
+              <span class="error"><?php echo $emailErr; ?></span>
+              <input type="password" name="password" placeholder="Enter Password Here">
+              <span class="error"><?php echo $passwordErr; ?></span>
+              <button type="submit" class="btn form__btn">Login</button>
+              <span class="notice"><?php echo $notice; ?></span>
+            </form>
+
+            <p class="link">Don't have an account?<br>
+            <a href="#">Sign up</a>here</p>
+            <p class="liw">Log in with</p>
+
+            <div class="icons">
+                <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
+                <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
+                <a href="#"><ion-icon name="logo-twitter"></ion-icon></a>
+                <a href="#"><ion-icon name="logo-google"></ion-icon></a>
+                <a href="#"><ion-icon name="logo-skype"></ion-icon></a>
+            </div>
+        </div>
+<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+        
+      </div>
+    </header>
+    
+    <footer class="footer">
+      <div class="section__container footer__container">
+        <div class="footer__col">
+          <h3>VanGo</h3>
+          <p>
+            Van on the Go! Rent a van anytime, anywhere, wherever. 
+          </p>
+        </div>
+        <div class="footer__col">
+          <h4>Support</h4>
+          <p>FAQs</p>
+          <p>Terms & Conditions</p>
+          <p>Privacy Policy</p>
+          <p>Contact Us</p>
+        </div>
+        <div class="footer__col">
+          <h4>Address</h4>
+          <p>
+            <span>Address:</span> 456 Sta. Mesa, Manila 1000, Philippines
+          </p>
+          <p><span>Email:</span> info@vango.com</p>
+          <p><span>Phone:</span> +68 9876543210</p>
+        </div>
+      </div>
+      <div class="footer__bar">
+        Copyright © 2023 VanGo. All rights reserved.
+      </div>
+    </footer>
+  </body>
+</html>
