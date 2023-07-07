@@ -259,7 +259,7 @@ function uploadFile($fileField, $destinationFolder)
             <input type="text" name="year" placeholder="2019" value="<?php echo isset($_POST['year']) ? $_POST['year'] : ''; ?>" required><br>
 
             <label for="capacity">Vehicle Capacity:</label>
-            <input type="text" name="capacity" placeholder="2019" value="<?php echo isset($_POST['capacity']) ? $_POST['capacity'] : ''; ?>" required><br>
+            <input type="text" name="capacity" value="<?php echo isset($_POST['capacity']) ? $_POST['capacity'] : ''; ?>" required><br>
 
             <label for="cr">LTO Certificate of Registration:</label>
             <input type="file" name="cr" <?php if (isset($_FILES['cr']) && $_FILES['cr']['error'] !== UPLOAD_ERR_NO_FILE) {

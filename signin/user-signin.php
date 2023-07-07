@@ -9,7 +9,7 @@ $errorFields = [];
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    if (isset($_POST['uname']) && isset($_POST['password']) && isset($_POST['loginBtn'])) {
+    if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['loginBtn'])) {
         // Retrieve form data for password table
         $email = $conn->real_escape_string($_POST["email"]);
         $password = $conn->real_escape_string($_POST["password"]);
