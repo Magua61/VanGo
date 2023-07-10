@@ -61,16 +61,7 @@ body {
   }
 
 /********************** NAVIGATION BAR ***********************/
-.navbar .getstarted {
-	background: #106eea;
-	margin-left: 30px;
-	border-radius: 4px;
-	font-weight: 400;
-	color: #fff;
-	text-decoration: none;
-	padding: .5rem 1rem;
-	line-height: 2.3;
-}
+
 .navbar-nav a {
 	font-size: 15px;
 	text-transform: uppercase;
@@ -145,6 +136,71 @@ body {
 	font-size: 20px;
 }
 
+.trip {
+    background-color: var(--secondary-color);
+  }
+  
+  .trip__container :is(.section__title, .section__subtitle, .view__all) {
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  
+  .trip__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 4rem 0;
+  }
+  
+  .trip__card {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .trip__details {
+    padding: 1rem;
+    display: grid;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    background-color: var(--extra-light);
+    cursor: pointer;
+  }
+  
+  .rating {
+    color: goldenrod;
+  }
+  
+  .booking__price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .price span {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+  
+  .book__now {
+    padding: 0.5rem 1.5rem;
+    color: var(--primary-color);
+    outline: none;
+    border: 1px solid var(--primary-color);
+    border-radius: 5rem;
+    background-color: transparent;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .book__now:hover {
+    color: var(--extra-light);
+    background-color: var(--primary-color);
+  }
 /********************** FOOTER ***********************/
 .footer {
     color:#fff;

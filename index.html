@@ -1,199 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css"
-      rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="style.css" />
-    <title>Web Design Mastery | Pathway</title>
-  </head>
-  <body>
-    <div class="wrapper row">
-      <button class="nav-toggle">
-        <span class="icon-area"></span>
-      </button>
-    <nav class="nav">
-      <div class="nav__logo logo">VanGo</div>
-      <ul class="nav__links">
-        <li class="link"><a href="#">Home</a></li>
-        <li class="link"><a href="#">About</a></li>
-        <li class="link"><a href="#">Rent-A-Van</a></li>
-        <li class="link"><a href="#">Be-A-Driver</a></li>
-      </ul>
-      <button class="btn"><a href="user-signup.html">Sign in</a></button>
-    </nav>
-    </div>
-    
+<head>
+	<meta charset="UTF-8">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<title>VanGo</title>
+	<!-- STYLE SHEETS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+	<link href="test1.css" rel="stylesheet">
+</head>
+<body>
+    <!-- NAVIGATION BAR -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+		<div class="container">
+			<a class="navbar-brand" href="#"><span class="text-info">Van</span>Go</a> <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link" href="#">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#about">About</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#services">Services</a>
+					</li>
+					<li class="nav-item">
+						<a class="btn action_btn" href="#">Sign in</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+    <!-- CAROUSEL / HOME -->
+ 
+	<div class="carousel slide" data-bs-ride="carousel" id="carouselExampleIndicators">
+		<div class="carousel-indicators">
+			<button aria-label="Slide 1" class="active" data-bs-slide-to="0" data-bs-target="#carouselExampleIndicators" type="button"></button> <button aria-label="Slide 2" data-bs-slide-to="1" data-bs-target="#carouselExampleIndicators" type="button"></button> <button aria-label="Slide 3" data-bs-slide-to="2" data-bs-target="#carouselExampleIndicators" type="button"></button>
+		</div>
+		<div class="carousel-inner">
+			<div class="carousel-item active" data-bs-interval="5000">
+				<img alt="..." class="d-block w-100" src="assets/image4.JPG">
+				<div class="carousel-caption">
+                    <h1>Van on the go! <br>Anytime, anywhere, wherever.</h1>
+				</div>
+			</div>
+			<div class="carousel-item" data-bs-interval="2000">
+				<img alt="..." class="d-block w-100" src="assets/image5.JPG">
+				<div class="carousel-caption">
+					<h1>Explore the Philippines!</h1>
+				</div>
+			</div>
+			<div class="carousel-item">
+				<img alt="..." class="d-block w-100" src="assets/image2.JPG">
+				<div class="carousel-caption">
+					<h1>Travel with your loved ones!</h1>
+				</div>
+			</div>
+		</div><button class="carousel-control-prev" data-bs-slide="prev" data-bs-target="#carouselExampleIndicators" type="button"><span aria-hidden="true" class="carousel-control-prev-icon"></span> <span class="visually-hidden">Previous</span></button> <button class="carousel-control-next" data-bs-slide="next" data-bs-target="#carouselExampleIndicators" type="button"><span aria-hidden="true" class="carousel-control-next-icon"></span> <span class="visually-hidden">Next</span></button>
+	</div>
 
+    <!-- ABOUT -->
+	<section class="about section-padding" id="about">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-4 col-md-12 col-12">
+					<div class="about-img"><img alt="" class="img-fluid" src="assets/van4.jpg"></div>
+				</div>
+				<div class="col-lg-8 col-md-12 col-12 ps-lg-5 mt-md-5">
+					<div class="about-text">
+						<h2>Van on the go! <br>
+                            Anytime, anywhere, wherever.</h2>
+						<p>Make your trip in just a click. We are the best van rental service
+                            here in the Philippines. We provide cheap, fast, and reliable vans
+                            as we support local van owners by giving them a platform to rent their vans!</a>
+					</div>
+                    <button class="btn action_btn">Rent a Van</button>
+				</div>
+			</div>
+		</div>
+	</section>
 
-    <header>
-      <div class="section__container header__container">
-        <div class="header__image">
-          <img src="assets/image2.jpg" alt="header" />
-          <img src="assets/image3.jpg" alt="header" />
+	<!-- SERVICES -->
+	<section class="services section-padding" id="services">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="section-header text-center pb-5">
+						<h2>Our Services</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 col-md-12 col-lg-6">
+					<div class="card text-white text-center bg-dark pb-2">
+						<div class="card-body">
+							<i class="fa-solid fa-van-shuttle"></i>
+							<h3 class="card-title">Rent a Van</h3>
+							<p class="lead">With our wide selection of vans for rent, you can choose which suits you best.</p>
+                            <button class="book__now">Read More</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-12 col-md-12 col-lg-6">
+					<div class="card text-white text-center bg-dark pb-2">
+						<div class="card-body">
+							<i class="fa-regular fa-handshake"></i>
+							<h3 class="card-title">Become our Partner</h3>
+							<p class="lead">We support our local van operators by providing a platform to rent their van!</p>
+                            <button class="book__now">Read More</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- TOP VAN -->
+	<section class="trip section-padding">
+        <div class="container">
+          <h2 class="section__title">Best Vans</h2>
+          <p class="section__subtitle">
+            Explore your suitable and preferred type of van. Here you can
+            find the right van for you.
+          </p>
+          <div class="row">
+            <div class="col-12 col-md-12 col-lg-4">
+            <div class="trip__card ">
+              <img class="img-fluid" src="assets/van1.jpg" alt="trip" />
+              <div class="trip__details">
+                <p>Luxury 12 Seater Van</p>
+                <div class="rating"><i class="ri-star-fill"></i> 4.8</div>
+                <div class="booking__price">
+                  <div class="price"><span>From</span> P10,000</div>
+                  <button class="book__now">Book Now</button>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-4">
+            <div class="trip__card">
+              <img class="img-fluid" src="assets/van2.JPG" alt="trip" />
+              <div class="trip__details">
+                <p>14 Seater Van</p>
+                <div class="rating"><i class="ri-star-fill"></i> 4.5</div>
+                <div class="booking__price">
+                  <div class="price"><span>From</span> P6,000</div>
+                  <button class="book__now">Book Now</button>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-4">
+            <div class="trip__card">
+              <img class="img-fluid" src="assets/van3.JPG" alt="trip" />
+              <div class="trip__details">
+                <p>12 Seater Van</p>
+                <div class="rating"><i class="ri-star-fill"></i> 4.7</div>
+                <div class="booking__price">
+                  <div class="price"><span>From</span> P5,000</div>
+                  <button class="book__now">Book Now</button>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
         </div>
-        <div class="header__content">
-          <div>
-            <p class="sub__header">Book Now</p>
-            <h1>Van on the go! 
-                Anytime, anywhere, wherever.</h1>
-            <p class="section__subtitle">
-              Make your trip in just a click. We are the best van rental service
-              here in the Philippines. We provide cheap, fast, and reliable vans
-              as we support local van owners by giving them a platform to rent their vans! 
+      </section>
+	
+	<!-- FOOTER -->
+	<footer class="footer bg-dark">
+        <div class="section__container footer__container">
+          <div class="footer__col">
+            <h3>VanGo</h3>
+            <p>
+              Van on the Go! Rent a van anytime, anywhere, wherever. 
             </p>
-            <div class="action__btns">
-              <button class="btn">Rent a Van</button>
-            </div>
+          </div>
+          <div class="footer__col">
+            <h4>Support</h4>
+            <p>FAQs</p>
+            <p>Terms & Conditions</p>
+            <p>Privacy Policy</p>
+            <p>Contact Us</p>
+          </div>
+          <div class="footer__col">
+            <h4>Address</h4>
+            <p>
+              <span>Address:</span> 456 Sta. Mesa, Manila 1000, Philippines
+            </p>
+            <p><span>Email:</span> info@vango.com</p>
+            <p><span>Phone:</span> +68 9876543210</p>
           </div>
         </div>
-      </div>
-    </header>
-    <div class="about">
-    <section class="section__container destination__container">
-      <div class="section__header">
-        <div>
-          <h2 class="section__title">Explore the country</h2>
-          <p class="section__subtitle">
-            Explore and visit places all around the country.
-            Our fleet of Vans is ready for you anywhere anytime!
-          </p>
+        <div class="footer__bar">
+          Copyright © 2023 VanGo. All rights reserved.
         </div>
-        <div class="destination__nav">
-          <span><i class="ri-arrow-left-s-line"></i></span>
-          <span><i class="ri-arrow-right-s-line"></i></span>
-        </div>
-      </div>
-      <div class="destination__grid">
-        <div class="destination__card">
-          <img src="assets/image1.jpg" alt="destination" />
-          <div class="destination__details">
-            <p class="destination__title">Chocolate Hills</p>
-            <p class="destination__subtitle">Bohol</p>
-          </div>
-        </div>
-        <div class="destination__card">
-          <img src="assets/image3.jpg" alt="destination" />
-          <div class="destination__details">
-            <p class="destination__title">Mayon Volcano</p>
-            <p class="destination__subtitle">Albay</p>
-          </div>
-        </div>
-        <div class="destination__card">
-          <img src="assets/image4.jpg" alt="destination" />
-          <div class="destination__details">
-            <p class="destination__title">Maria Cristina Falls</p>
-            <p class="destination__subtitle">Lanao Del Norte</p>
-          </div>
-        </div>
-        <div class="destination__card">
-          <img src="assets/image5.jpg" alt="destination" />
-          <div class="destination__details">
-            <p class="destination__title">Baler</p>
-            <p class="destination__subtitle">Aurora</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="trip">
-      <div class="section__container trip__container">
-        <h2 class="section__title">Best Vans</h2>
-        <p class="section__subtitle">
-          Explore your suitable and preferred type of van. Here you can
-          find the right van for you.
-        </p>
-        <div class="trip__grid">
-          <div class="trip__card">
-            <img src="assets/van1.jpg" alt="trip" />
-            <div class="trip__details">
-              <p>Luxury 12 Seater Van</p>
-              <div class="rating"><i class="ri-star-fill"></i> 4.8</div>
-              <div class="booking__price">
-                <div class="price"><span>From</span> P10,000</div>
-                <button class="book__now">Book Now</button>
-              </div>
-            </div>
-          </div>
-          <div class="trip__card">
-            <img src="assets/van2.jpg" alt="trip" />
-            <div class="trip__details">
-              <p>14 Seater Van</p>
-              <div class="rating"><i class="ri-star-fill"></i> 4.5</div>
-              <div class="booking__price">
-                <div class="price"><span>From</span> P6,000</div>
-                <button class="book__now">Book Now</button>
-              </div>
-            </div>
-          </div>
-          <div class="trip__card">
-            <img src="assets/van3.jpg" alt="trip" />
-            <div class="trip__details">
-              <p>12 Seater Van</p>
-              <div class="rating"><i class="ri-star-fill"></i> 4.7</div>
-              <div class="booking__price">
-                <div class="price"><span>From</span> P5,000</div>
-                <button class="book__now">Book Now</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="view__all">
-          <button class="btn">View All</button>
-        </div>
-      </div>
-    </section>
-
-    
-
-    <section class="subscribe">
-      <div class="section__container subscribe__container">
-        <div class="subscribe__content">
-          <h2 class="section__title">Join Us!</h2>
-          <p class="section__subtitle">
-            Become one of our top van owners and enjoy bonuses and promotions.
-          </p>
-        </div>
-        <div class="subscribe__form">
-          <form>
-            <input type="email" placeholder="Your email here" />
-            <button class="btn" type="submit">Send</button>
-          </form>
-        </div>
-      </div>
-    </section>
-    </div>
-    <footer class="footer">
-      <div class="section__container footer__container">
-        <div class="footer__col">
-          <h3>VanGo</h3>
-          <p>
-            Van on the Go! Rent a van anytime, anywhere, wherever. 
-          </p>
-        </div>
-        <div class="footer__col">
-          <h4>Support</h4>
-          <p>FAQs</p>
-          <p>Terms & Conditions</p>
-          <p>Privacy Policy</p>
-          <p>Contact Us</p>
-        </div>
-        <div class="footer__col">
-          <h4>Address</h4>
-          <p>
-            <span>Address:</span> 456 Sta. Mesa, Manila 1000, Philippines
-          </p>
-          <p><span>Email:</span> info@vango.com</p>
-          <p><span>Phone:</span> +68 9876543210</p>
-        </div>
-      </div>
-      <div class="footer__bar">
-        Copyright © 2023 VanGo. All rights reserved.
-      </div>
-    </footer>
-  </body>
+      </footer>
+	<!-- footer ends -->
+	
+	<!-- All Js -->
+	<script src="https://kit.fontawesome.com/c08dde9054.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
