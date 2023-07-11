@@ -53,6 +53,7 @@ body {
   grid-column-gap: 1.5em;
   padding: 2em 0;
 }
+
 .card {
   background-color: #ffff;
   max-width: 19em;
@@ -105,4 +106,50 @@ img {
     grid-template-columns: auto auto;
     grid-column-gap: 1em;
   }
+}
+
+.radio-input {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 0.5rem;
+  background-color: #eee;
+  box-sizing: border-box;
+  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  width: 300px;
+  font-size: 14px;
+}
+
+.radio-input .radio {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.radio-input .radio input {
+  display: none;
+}
+
+.radio-input .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: 0.5rem 0;
+  color: rgba(51, 65, 85, 1);
+  transition: all 0.15s ease-in-out;
+}
+
+.radio-input .radio input:checked + .name {
+  background-color: #fff;
+  font-weight: 600;
+}
+/* Center the modal vertically and horizontally */
+.modal-dialog.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }

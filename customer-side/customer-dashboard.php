@@ -37,6 +37,7 @@ while ($row = $result->fetch_assoc()) {
     $vans[] = $row;
 }
 
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -64,9 +65,9 @@ while ($row = $result->fetch_assoc()) {
         />
         <div id="date-container">
             <label for="start-date">Pickup date:</label>
-            <input type="date" id="start-date" placeholder="Start Date" />
+            <input type="date" id="start-date" placeholder="Start Date" required>
             <label for="end-date">Return date:</label>
-            <input type="date" id="end-date" placeholder="End Date" />
+            <input type="date" id="end-date" placeholder="End Date" required>
         </div>
         
       </div>
@@ -87,8 +88,29 @@ while ($row = $result->fetch_assoc()) {
             </button>
           </div>
           <div class="modal-body">
+          <div id="error-messages">
+              <?php if (!empty($errors)) : ?>
+                  <ul class="error">
+                      <?php foreach ($errors as $error) : ?>
+                          <li><?php echo $error; ?></li>
+                      <?php endforeach; ?>
+                  </ul>
+              <?php endif; ?>
+          </div>
             <form>
+              <div class="radio-input">
+                <label class="radio" >
+                  <input value="value-2" name="value-radio" id="value-2" type="radio" checked="">
+                  <span class="name" >Without Driver</span>
+                </label>
+                <label class="radio" >
+                  <input value="value-1" name="value-radio" id="value-1" type="radio">
+                  <span class="name" >With Driver</span>
+                </label>
+                <span class="selection"></span>
+              </div>
               <div class="form-group">
+                <br/>
                 <label for="destination">Destination:</label>
                 <input type="text" class="form-control" id="destination" placeholder="Enter destination" required>
               </div>
@@ -105,6 +127,10 @@ while ($row = $result->fetch_assoc()) {
                 <input type="time" class="form-control" id="pickup-time" required>
               </div>
               <div class="form-group">
+                <label for="return-address" id="return-address-label" >Return Address:</label>
+                <input type="text" class="form-control" id="return-address" placeholder="Enter return address">
+              </div>
+              <div class="form-group">
                 <label for="return-date">Return Date:</label>
                 <input type="date" class="form-control" id="return-date" readonly>
               </div>
@@ -117,10 +143,11 @@ while ($row = $result->fetch_assoc()) {
                 <input type="number" class="form-control" id="total-price" readonly>
               </div>
             </form>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="save-changes-btn" data-van-id="">Save changes</button>
-          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="save-changes-btn" data-van-id="">Proceed to payment</button>
+            </div>
+            
         </div>
       </div>
     </div>
@@ -192,16 +219,22 @@ while ($row = $result->fetch_assoc()) {
             card.addEventListener("click", function () {
               var vanName = this.querySelector(".van-name").innerText;
               var vanId = getVanIdByName(vanName);
+
               var pickupDate = document.getElementById("start-date").value;
               var returnDate = document.getElementById("end-date").value;
-              //var pickupTime = document.getElementById("pickup-time").value;
-              //document.getElementById("return-time").value = pickupTime;
+              var withoutDriverRadio = document.getElementById("value-2");
 
+              withoutDriverRadio.checked = true;
+              
               // Calculate the number of days between pickup date and return date
               var startDate = new Date(pickupDate);
               var endDate = new Date(returnDate);
               var timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
               var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+              if (diffDays === 0) {
+                diffDays = 1;
+              }
 
               // Calculate the total price based on the number of days and van rate
               var vanRate = van.V_Rate ? parseFloat(van.V_Rate) : 0;
@@ -211,8 +244,6 @@ while ($row = $result->fetch_assoc()) {
               document.getElementById("destination").value = ""; // Clear the value of the "Destination" field
               document.getElementById("pickup-date").value = pickupDate;
               document.getElementById("return-date").value = returnDate;
-              //document.getElementById("pickup-time").value = pickupTime; 
-              //document.getElementById("return-time").value = pickupTime;
               document.getElementById("total-price").value = totalPrice.toFixed(2); // Update the total price field
               // ... Update other fields as needed
 
@@ -225,6 +256,7 @@ while ($row = $result->fetch_assoc()) {
               modal.show();
 
               console.log(vanId);
+              console.log(totalPrice);
               console.log(saveChangesButton);
             });
 
@@ -236,36 +268,13 @@ while ($row = $result->fetch_assoc()) {
       function filterVan(category) {
         if (category === "all") {
           filteredVans = vans;
-        } else {
-          filteredVans = vans.filter(function (van) {
-            return van.category === category;
-          });
+          document.getElementById("start-date").value = ""; // Clear the start date field
+          document.getElementById("end-date").value = ""; // Clear the end date field
         }
-
+        
         renderVans();
       }
-/*
-      document.getElementById("search").addEventListener("click", function () {
-        var searchInput = document.getElementById("search-input").value.toUpperCase();
-        var startDate = document.getElementById("start-date").value;
-        var endDate = document.getElementById("end-date").value;
-
-        filteredVans = vans.filter(function (van) {
-          var vanName = van.V_Name.toUpperCase();
-          var capacity = van.V_Capacity.toString().toUpperCase();
-          var price = van.V_Rate.toString().toUpperCase();
-          var isAvailable = isVanAvailable(van, startDate, endDate, unavailableDates);
-
-          return (
-            vanName.includes(searchInput) ||
-            capacity.includes(searchInput) ||
-            price.includes(searchInput)
-          ) && isAvailable;
-        });
-
-        renderVans();
-      });
-*/    
+      
       document.getElementById("search-input").addEventListener("input", function() {
         var searchInput = this.value.toUpperCase();
         var startDate = document.getElementById("start-date").value;
@@ -286,6 +295,178 @@ while ($row = $result->fetch_assoc()) {
 
         renderVans();
       });
+
+      // Get the radio buttons and the return address input field
+      var radioButtons = document.querySelectorAll('input[name="value-radio"]');
+      var returnAddressLabel = document.querySelector('label[for="return-address"]');
+      var returnAddressField = document.getElementById("return-address");
+      var totalPriceField = document.getElementById("total-price");
+      var totalLabel = document.querySelector('label[for="total-price"]');
+      var vanDriverRate = 1000; // Additional fee for van with driver
+
+      // Add event listener to the radio buttons
+      radioButtons.forEach(function (radioButton) {
+        radioButton.addEventListener("change", function () {
+          console.log(vanDriverRate);
+          console.log(totalPriceField.value);
+
+          var pickupDate = document.getElementById("pickup-date").value;
+          var returnDate = document.getElementById("return-date").value;
+          var startDate = new Date(pickupDate);
+          var endDate = new Date(returnDate);
+          var timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+          var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+          if (diffDays === 0) {
+            diffDays = 1;
+          }
+
+          var withoutDriverRadio = document.getElementById("value-2");
+          var withDriverRadio = document.getElementById("value-1");
+          
+          var tempTotal = parseFloat(totalPriceField.value);
+
+          var selectedVanId = document.querySelector(".modal-footer .btn-primary").getAttribute("data-van-id");
+          var selectedVan = vans.find(function (van) {
+            return van.Van_ID === selectedVanId;
+          });
+
+          if (withDriverRadio.checked) {
+            returnAddressField.style.display = "none"; // Hide the return address field
+            returnAddressLabel.style.display = "none"; 
+            totalLabel.innerText = "Total Price (includes Driver's Fee):";
+
+            vanDriverRate = 1000;
+            vanDriverRate = diffDays * vanDriverRate;
+            tempTotal += vanDriverRate;
+            totalPriceField.value = tempTotal.toFixed(2);
+           // Add vanDriverRate to the rate if "With Driver" is selected
+          }else if(withoutDriverRadio.checked) {
+            returnAddressField.style.display = "block"; // Show the return address field
+            returnAddressLabel.style.display = "block"; 
+            totalLabel.innerText = "Total Price:";
+
+            vanDriverRate = 1000;
+            vanDriverRate = diffDays * vanDriverRate;
+            tempTotal -= vanDriverRate;
+
+            totalPriceField.value = tempTotal.toFixed(2);
+          }
+        });
+      });
+
+      document.getElementById("save-changes-btn").addEventListener("click", function() {
+        // Retrieve the values of the fields in the modal form
+        var withoutDriverRadio = document.getElementById("value-2");
+        var vanId = document.getElementById("save-changes-btn").getAttribute("data-van-id");
+        var destination = document.getElementById("destination").value;
+        var pickupAddress = document.getElementById("pickup-address").value;
+        var pickupDate = document.getElementById("pickup-date").value;
+        var pickupTime = document.getElementById("pickup-time").value;
+        var returnAddress = document.getElementById("return-address").value;
+        var returnDate = document.getElementById("return-date").value;
+        var returnTime = document.getElementById("return-time").value;
+        var totalPrice = document.getElementById("total-price").value;
+
+        // Create a new form element
+        var form = document.createElement("form");
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", "payment.php");
+
+        // Create input elements and append them to the form
+        var vanIdInput = document.createElement("input");
+        vanIdInput.setAttribute("type", "hidden");
+        vanIdInput.setAttribute("name", "vanId");
+        vanIdInput.setAttribute("value", vanId);
+        form.appendChild(vanIdInput);
+
+        var destinationInput = document.createElement("input");
+        destinationInput.setAttribute("type", "hidden");
+        destinationInput.setAttribute("name", "destination");
+        destinationInput.setAttribute("value", destination);
+        form.appendChild(destinationInput);
+
+        var pickupAddressInput = document.createElement("input");
+        pickupAddressInput.setAttribute("type", "hidden");
+        pickupAddressInput.setAttribute("name", "pickupAddress");
+        pickupAddressInput.setAttribute("value", pickupAddress);
+        form.appendChild(pickupAddressInput);
+
+        var pickupDateInput = document.createElement("input");
+        pickupDateInput.setAttribute("type", "hidden");
+        pickupDateInput.setAttribute("name", "pickupDate");
+        pickupDateInput.setAttribute("value", pickupDate);
+        form.appendChild(pickupDateInput);
+
+        var pickupTimeInput = document.createElement("input");
+        pickupTimeInput.setAttribute("type", "hidden");
+        pickupTimeInput.setAttribute("name", "pickupTime");
+        pickupTimeInput.setAttribute("value", pickupTime);
+        form.appendChild(pickupTimeInput);
+
+        var returnAddressInput = document.createElement("input");
+        returnAddressInput.setAttribute("type", "hidden");
+        returnAddressInput.setAttribute("name", "returnAddress");
+        returnAddressInput.setAttribute("value", returnAddress);
+        form.appendChild(returnAddressInput);
+
+        var returnDateInput = document.createElement("input");
+        returnDateInput.setAttribute("type", "hidden");
+        returnDateInput.setAttribute("name", "returnDate");
+        returnDateInput.setAttribute("value", returnDate);
+        form.appendChild(returnDateInput);
+
+        var returnTimeInput = document.createElement("input");
+        returnTimeInput.setAttribute("type", "hidden");
+        returnTimeInput.setAttribute("name", "returnTime");
+        returnTimeInput.setAttribute("value", returnTime);
+        form.appendChild(returnTimeInput);
+
+        var totalPriceInput = document.createElement("input");
+        totalPriceInput.setAttribute("type", "hidden");
+        totalPriceInput.setAttribute("name", "totalPrice");
+        totalPriceInput.setAttribute("value", totalPrice);
+        form.appendChild(totalPriceInput);
+
+            // Remove existing error messages
+        var errorMessages = document.getElementById("error-messages");
+        if (errorMessages) {
+            errorMessages.innerHTML = "";
+        }
+
+        // Validate form fields
+        var errors = [];
+        if (destination.trim() === "") {
+            errors.push("Destination is required.");
+        }
+        if (pickupAddress.trim() === "") {
+            errors.push("Pickup Address is required.");
+        }
+        if (pickupTime.trim() === "") {
+            errors.push("Pickup Time is required.");
+        }
+        if (withoutDriverRadio.checked && returnAddress.trim() === "") {
+            errors.push("Return Address is required.");
+        }
+    
+        // If there are errors, display them and prevent form submission
+        if (errors.length > 0) {
+            var errorList = document.createElement("ul");
+            errorList.className = "error";
+            errors.forEach(function(error) {
+                var listItem = document.createElement("li");
+                listItem.textContent = error;
+                errorList.appendChild(listItem);
+            });
+            errorMessages.appendChild(errorList);
+            return;
+        }
+
+        // Append the form to the document body and submit it
+        document.body.appendChild(form);
+        form.submit();
+      });
+
 
       // Start Date Field
       document.getElementById("start-date").addEventListener("input", function() {
@@ -361,7 +542,7 @@ while ($row = $result->fetch_assoc()) {
 
         return null;
       }
-
+      
       document.getElementById("pickup-time").addEventListener("input", function() {
         var pickupTime = this.value;
         document.getElementById("return-time").value = pickupTime;
