@@ -167,7 +167,7 @@
 
       <div class="container">
         <div id="rentalInfo">
-            <h2>Rental Details</h2>
+            <h3>Rental <span id="rentalDetail"></span></h3>
             <p>Customer Name: <span id="customerName"></span></p>
             <p>Destination: <span id="destination"></span></p>
             <p>Pickup Address: <span id="pickupAddress"></span></p>
@@ -244,11 +244,19 @@
                       var pickupAddress = matchedRental.Pickup_Address;
                       var pickupDate = matchedRental.Pickup_Date;
                       var pickupTime = matchedRental.Pickup_Time;
-                      var returnAddress = matchedRental.Return_Address;
+                      var returnAddress = matchedRental.Return_Address ? matchedRental.Return_Address : 'Not applicable';
                       var returnDate = matchedRental.Return_Date;
                       var returnTime = matchedRental.Return_Time;
+                      var rentalDetail;
+
+                      if (returnAddress !== 'Not applicable' || returnAddress !== null) {
+                        rentalDetail = 'With Driver';
+                      }else{
+                        rentalDetail = 'Without Driver';
+                      }
 
                       // Example: Display rental details in the rentalInfo div
+                      $('#rentalInfo #rentalDetail').text(rentalDetail);
                       $('#rentalInfo #customerName').text(customerFullName);
                       $('#rentalInfo #destination').text(destination);
                       $('#rentalInfo #pickupAddress').text(pickupAddress);
