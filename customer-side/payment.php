@@ -15,7 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $returnTime = $conn->real_escape_string($_POST['returnTime']);
     $totalPrice = $conn->real_escape_string($_POST['totalPrice']);
 
-    $query = "SELECT concat_ws(' ', V_Make, V_Model, V_Capacity) as 'V_Name' FROM van WHERE Van_ID=?";
+    
+    $query = "SELECT concat_ws(' ', V_Make, V_Model, V_Year) as 'V_Name', V_Rate
+            FROM van V JOIN van_rate VR
+                ON V.Van_ID = VR.Van_ID
+            WHERE V.Van_ID=?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $vanId);
     $stmt->execute();
@@ -23,6 +27,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $van = $result->fetch_assoc();
 
+    // Calculate the number of days
+    $pickupTimestamp = strtotime($pickupDate);
+    $returnTimestamp = strtotime($returnDate);
+    $diffSeconds = $returnTimestamp - $pickupTimestamp;
+    $diffDays = floor($diffSeconds / (60 * 60 * 24));
+
+    $rentalFee = $van['V_Rate'] * $diffDays;
+    $driverFee = $totalPrice - $rentalFee;
+
+    $rentalFee = number_format($rentalFee, 2);
+    $driverFee = number_format($driverFee, 2);
+    $totalPrice = number_format($totalPrice, 2);
+
+    $rentalFee = str_replace(',', '', $rentalFee);
+    $driverFee = str_replace(',', '', $driverFee);
+    $totalPrice = str_replace(',', '', $totalPrice);
   }
 
 
@@ -200,17 +220,30 @@ $conn->close();
                         </p>
                         <div class="collapse p-3 pt-0" id="collapseExample">
                             <div class="row">
-                                <div class="col-8">
-                                    <p class="h4 mb-0" style="font-size:24px">Summary</p>
-                                    <p class="mb-0" style="font-size:22px">
-                                      <span class="fw-bold">&nbsp &nbsp Van:</span>
-                                      <span><?php echo $van['V_Name']; ?></span>
-                                    </p>
-                                    <p class="mb-0" style="font-size:22px">
-                                      <span class="fw-bold">&nbsp &nbsp Total Amount:</span>
-                                      <span>₱ <?php echo $totalPrice; ?></span>
-                                    </p>
-                                </div>
+                            <div class="col-8">
+                                <p class="h4 mb-0" style="font-size:24px">Summary</p>
+                                <p class="mb-0" style="font-size:22px">
+                                    <span>&nbsp &nbsp Van:</span>
+                                    <span><?php echo $van['V_Name']; ?></span>
+                                </p>
+                                <p class="mb-0" style="font-size:22px">
+                                    <span>&nbsp &nbsp Rental Duration:</span>
+                                    <span><?php echo $diffDays." days"; ?></span>
+                                </p>
+                                <p class="mb-0" style="font-size:22px">
+                                    <span>&nbsp &nbsp Rental Fee:</span>
+                                    <span>₱<?php echo $rentalFee; ?></span>
+                                </p>
+                                <p class="mb-0" style="font-size:22px">
+                                    <span>&nbsp &nbsp Driver's Fee:</span>
+                                    <span>₱<?php echo $driverFee; ?></span>
+                                </p>
+                                <p class="mb-0" style="font-size:22px">
+                                    <span>&nbsp &nbsp Total Amount:</span>
+                                    <span>₱<?php echo $totalPrice; ?></span>
+                                </p>
+                            </div>
+
                             </div>
                         </div>
                     </div>
@@ -232,12 +265,24 @@ $conn->close();
                                 <div class="col-lg-5 mb-lg-0 mb-3">
                                     <p class="h4 mb-0" style="font-size:24px">Summary</p>
                                     <p class="mb-0" style="font-size:22px">
-                                      <span class="fw-bold">&nbsp &nbsp Van:</span>
-                                      <span><?php echo $van['V_Name']; ?></span>
+                                        <span>&nbsp &nbsp Van:</span>
+                                        <span><?php echo $van['V_Name']; ?></span>
                                     </p>
                                     <p class="mb-0" style="font-size:22px">
-                                        <span class="fw-bold">&nbsp &nbsp Total Amount:</span>
-                                        <span>₱ <?php echo $totalPrice; ?></span>
+                                        <span>&nbsp &nbsp Rental Duration:</span>
+                                        <span><?php echo $diffDays." days"; ?></span>
+                                    </p>
+                                    <p class="mb-0" style="font-size:22px">
+                                        <span>&nbsp &nbsp Rental Fee:</span>
+                                        <span>₱<?php echo $rentalFee; ?></span>
+                                    </p>
+                                    <p class="mb-0" style="font-size:22px">
+                                        <span>&nbsp &nbsp Driver's Fee:</span>
+                                        <span>₱<?php echo $driverFee; ?></span>
+                                    </p>
+                                    <p class="mb-0" style="font-size:22px">
+                                        <span>&nbsp &nbsp Total Amount:</span>
+                                        <span>₱<?php echo $totalPrice; ?></span>
                                     </p>
                                 </div>
                                 <div class="col-lg-7">
