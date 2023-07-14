@@ -24,7 +24,9 @@ body {
 
 /********************** FOOTER ***********************/
 .footer {
-  background-color: var(--text-dark);
+  color:#fff;
+  padding:2rem;
+  flex-shrink: 0;
 }
 
 .footer__container {
@@ -34,10 +36,12 @@ body {
   color: var(--secondary-color);
 }
 
+
 .footer__col h3 {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 2rem;
+  padding-top: 2rem;
 }
 
 .footer__col h3 span {
