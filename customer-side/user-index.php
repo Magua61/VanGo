@@ -23,11 +23,12 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $query = "SELECT V.Van_ID, V_Photo, concat_ws(' ', V_Make, V_Model) as 'V_Name', V_Year, V_Capacity, concat_ws(' ', O_FName, O_LName) as 'O_FullName', O_Address, O_PhoneNo, V_Rate, V_PlateNo
-        FROM owner O JOIN
-            van V ON
+          FROM owner O JOIN van V ON
             O.Owner_ID = V.Owner_ID
-        LEFT JOIN van_rate VR ON
-            V.Van_ID = VR.Van_ID";
+          LEFT JOIN van_rate VR ON
+            V.Van_ID = VR.Van_ID
+          LEFT JOIN van_photo VP ON
+            V.Van_ID = VP.Van_ID";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -124,7 +125,7 @@ $conn->close();
          </li>
          <li><hr class="dropdown-divider" /></li>
          <li>
-           <a class="dropdown-item" href="#">Logout </a>
+           <a class="dropdown-item" href="../signin/user-signin.php" >Logout </a>
          </li>
        </ul>
      </div>
@@ -501,7 +502,7 @@ $conn->close();
       <div class="modal-body">
       <div id="error-messages">
           <?php if (!empty($errors)) : ?>
-              <ul class="error">
+              <ul class="error"  style="color: red;">
                   <?php foreach ($errors as $error) : ?>
                       <li><?php echo $error; ?></li>
                   <?php endforeach; ?>
@@ -597,7 +598,6 @@ $conn->close();
 	<!-- JAVASCRIPT -->
   <script src="https://kit.fontawesome.com/c08dde9054.js" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -868,6 +868,23 @@ $conn->close();
 
       function searchVans() {
           var keyword = document.getElementById("typeSearch").value.trim().toLowerCase();
+          var brandCheckboxes = document.getElementsByClassName("brand-checkbox");
+          var minPriceInput = document.getElementById("minPrice");
+          var maxPriceInput = document.getElementById("maxPrice");
+          var seatCapacityInput = document.getElementById("seatCapacity");
+          var checkedCheckboxes = document.querySelectorAll('.form-check-input');
+
+          for (var i = 0; i < brandCheckboxes.length; i++) {
+              brandCheckboxes[i].checked = true; // Set the "checked" property to true
+          }
+
+          for (var i = 0; i < checkedCheckboxes.length; i++) {
+              checkedCheckboxes[i].checked = true; // Set the "checked" property to true
+          }
+
+          minPriceInput.value = "";
+          maxPriceInput.value = "";
+          seatCapacityInput.value = "";
 
           // Perform van filtering based on the keyword
           filteredVans = vans.filter(function (van) {
