@@ -342,7 +342,7 @@ $conn->close();
         var cancelPaymentBtn = document.getElementById("cancel-payment-btn");
         cancelPaymentBtn.addEventListener("click", function() {
             alert("Payment cancelled!");
-            window.location.href = "customer-dashboard.php";
+            window.location.href = "user-index.php";
         });
 
         var makePaymentBtn = document.getElementById("make-payment-btn");
@@ -370,7 +370,7 @@ $conn->close();
                         if (response.success) {
                             console.log("Records inserted successfully.");
                             alert("Payment Successful! Thank you for your payment. Your transaction has been successfully processed.");
-                            window.location.href = "customer-dashboard.php";
+                            window.location.href = "user-index.php";
                         } else {
                             console.log("Error inserting records.");
                             alert("Payment Failed! Please try again later.");

@@ -68,7 +68,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     // Redirect based on the user type
                     if ($row['User_Type'] === 'customer') {
-                        header('Location: ../customer-side/customer-dashboard.php');
+                        //header('Location: ../customer-side/customer-dashboard.php');
+                        header('Location: ../customer-side/user-index.php');
                         exit();
                     } elseif ($row['User_Type'] === 'owner') {
                         header('Location: ../owner-side/owner-dashboard.php');
