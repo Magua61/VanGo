@@ -532,7 +532,7 @@ $conn->close();
           </div>
           <div class="form-group">
             <label for="pickup-date">Pickup Date:</label>
-            <input type="date" class="form-control" id="pickup-date" readonly>
+            <input type="date" class="form-control" id="pickup-date" >
           </div>
           <div class="form-group">
             <label for="pickup-time">Pickup Time:</label>
@@ -544,7 +544,7 @@ $conn->close();
           </div>
           <div class="form-group">
             <label for="return-date">Return Date:</label>
-            <input type="date" class="form-control" id="return-date" readonly>
+            <input type="date" class="form-control" id="return-date" >
           </div>
           <div class="form-group">
             <label for="return-time">Return Time:</label>
@@ -609,6 +609,7 @@ $conn->close();
       var vanId;
       var dailyRateValue = "";
       var filteredVans = vans.slice();
+      var vanDriverRate = 1000;
 
       function renderVans() {
           var vansContainer = document.getElementById("products");
@@ -917,6 +918,18 @@ $conn->close();
         return !overlappingUnavailableDate; // Return true if no overlapping entry found, indicating availability
       }
 
+      function checkVanAvailability(vanId, startDate, endDate) {
+        var overlappingUnavailableDate = unavailableDates.find(function (date) {
+          return (
+            date.Van_ID === vanId &&
+            ((date.Start_Date <= startDate && startDate <= date.End_Date) ||
+              (date.Start_Date <= endDate && endDate <= date.End_Date))
+          );
+        });
+
+        return !overlappingUnavailableDate;
+      }
+
       function adjustPriceRange() {
           var rangeInput = document.getElementById("customRange1");
           var minPriceInput = document.getElementById("minPrice");
@@ -986,16 +999,15 @@ $conn->close();
       var returnAddressField = document.getElementById("return-address");
       var totalPriceField = document.getElementById("total-price");
       var totalLabel = document.querySelector('label[for="total-price"]');
-      var vanDriverRate = 1000; // Additional fee for van with driver
 
       // Add event listener to the radio buttons
       radioButtons.forEach(function (radioButton) {
         radioButton.addEventListener("change", function () {
-          console.log(vanDriverRate);
-          console.log(totalPriceField.value);
 
           var pickupDate = document.getElementById("pickup-date").value;
           var returnDate = document.getElementById("return-date").value;
+          var totalPrice = document.getElementById("total-price").value;
+
           var startDate = new Date(pickupDate);
           var endDate = new Date(returnDate);
           var timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
@@ -1008,7 +1020,7 @@ $conn->close();
           var withoutDriverRadio = document.getElementById("value-2");
           var withDriverRadio = document.getElementById("value-1");
           
-          var tempTotal = parseFloat(totalPriceField.value);
+          var tempTotal = parseFloat(totalPrice);
 
           var selectedVanId = document.querySelector(".modal-footer .btn-primary").getAttribute("data-van-id");
           var selectedVan = vans.find(function (van) {
@@ -1023,7 +1035,8 @@ $conn->close();
             vanDriverRate = 1000;
             vanDriverRate = diffDays * vanDriverRate;
             tempTotal += vanDriverRate;
-            totalPriceField.value = tempTotal.toFixed(2);
+
+            document.getElementById("total-price").value = tempTotal ? tempTotal.toFixed(2) : "0.00";
            // Add vanDriverRate to the rate if "With Driver" is selected
           }else if(withoutDriverRadio.checked) {
             returnAddressField.style.display = "block"; // Show the return address field
@@ -1034,7 +1047,7 @@ $conn->close();
             vanDriverRate = diffDays * vanDriverRate;
             tempTotal -= vanDriverRate;
 
-            totalPriceField.value = tempTotal.toFixed(2);
+            document.getElementById("total-price").value = tempTotal ? tempTotal.toFixed(2) : "0.00";
           }
         });
       });
@@ -1076,7 +1089,7 @@ $conn->close();
           document.getElementById("destination").value = ""; // Clear the value of the "Destination" field
           document.getElementById("pickup-date").value = pickupDate;
           document.getElementById("return-date").value = returnDate;
-          document.getElementById("total-price").value = totalPrice.toFixed(2); // Update the total price field
+          document.getElementById("total-price").value = totalPrice ? totalPrice.toFixed(2) : "0.00"; // Update the total price field
 
           // Set the vanId as the value of data-van-id attribute
           var saveChangesButton = document.querySelector(".modal-footer .btn-primary");
@@ -1094,7 +1107,9 @@ $conn->close();
         var returnDate = document.getElementById("return-date").value;
         var returnTime = document.getElementById("return-time").value;
         var totalPrice = document.getElementById("total-price").value;
+        var isVanAvailable = checkVanAvailability(vanId, pickupDate, returnDate);
 
+        
         // Create a new form element
         var form = document.createElement("form");
         form.setAttribute("method", "POST");
@@ -1175,6 +1190,12 @@ $conn->close();
         if (withoutDriverRadio.checked && returnAddress.trim() === "") {
             errors.push("Return Address is required.");
         }
+        if (pickupDate > returnDate) {
+            errors.push("Return date must be after the pickup date.");
+        }
+        if (!isVanAvailable) {
+            errors.push("The van is not available for these dates.");
+        }
     
         // If there are errors, display them and prevent form submission
         if (errors.length > 0) {
@@ -1193,6 +1214,43 @@ $conn->close();
         document.body.appendChild(form);
         form.submit();
       });
+
+      document.getElementById("pickup-date").addEventListener("input", updateTotalPrice);
+      document.getElementById("return-date").addEventListener("input", updateTotalPrice);
+
+      function updateTotalPrice() {
+        var vanDriverRate = 1000;
+        console.log(vanDriverRate);
+        var withDriverRadio = document.getElementById("value-1");
+
+        var pickupDate = new Date(document.getElementById("pickup-date").value);
+        var returnDate = new Date(document.getElementById("return-date").value);
+
+        console.log(pickupDate);
+        console.log(returnDate);
+
+        var startDate = new Date(pickupDate);
+        var endDate = new Date(returnDate);
+        var timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+        var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+        if (diffDays === 0) {
+          diffDays = 1;
+        }
+
+        // Calculate the total price based on the number of days and van rate
+        var vanRate = parseFloat(dailyRateValue);
+        var totalPrice = diffDays * vanRate;
+        
+        if (withDriverRadio.checked) {
+          vanDriverRate = diffDays * vanDriverRate;
+          totalPrice += vanDriverRate;
+          console.log(totalPrice);
+        }
+        
+        document.getElementById("total-price").value = totalPrice ? totalPrice.toFixed(2) : "0.00";
+      }
+
 
       window.onload = function () {
         renderVans();
