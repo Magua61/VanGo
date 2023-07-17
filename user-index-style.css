@@ -119,6 +119,10 @@ body {
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
   }
+
+  .modal-lg .modal-dialog {
+    max-width: 1200px; /* Adjust the value as needed */
+  }
 /*********************MAKE-IT-RESPONSIVE*******************/
 
 
