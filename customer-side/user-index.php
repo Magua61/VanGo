@@ -562,6 +562,7 @@ $conn->close();
         
     </div>
   </div>
+  
 </div>
 
 	<!-- FOOTER -->
@@ -592,7 +593,7 @@ $conn->close();
         <div class="footer__bar">
           Copyright © 2023 VanGo. All rights reserved.
         </div>
-      </footer>
+    </footer>
 	<!-- footer ends -->
 	
 	<!-- JAVASCRIPT -->
@@ -642,7 +643,7 @@ $conn->close();
                   if (van.hasOwnProperty("V_Photo")) {
                       image.setAttribute("src", "../registration/" + van.V_Photo);
                   }
-                  image.classList.add("card-img-top");
+                  image.classList.add("card-img-top","w-100","h-50");
                   innerCard.appendChild(image);
 
                   var cardBody = document.createElement("div");
