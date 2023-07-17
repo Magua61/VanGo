@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Redirect to success page
         header("Location: ../signin/user-signin.php");
-        
+    
         session_unset();
         session_destroy();
 

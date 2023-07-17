@@ -102,7 +102,7 @@ $conn->close();
    <!-- Notifications -->
    <div class="navbar-nav d-flex flex-row">
     <div class="nav-item me-3 me-lg-0">
-    <a href="#" class="btn btn-light" title="Home">
+    <a href="user-index.php" class="btn btn-light" title="Home">
       <i class="fa-solid fa-house"></i>
     </a>
     </div>
@@ -118,7 +118,7 @@ $conn->close();
      </button>
        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
          <li>
-           <a class="dropdown-item" href="#">Profile</a>
+           <a class="dropdown-item" href="user-profile.php">Profile</a>
          </li>
          <li>
            <a class="dropdown-item" href="#">Settings</a>
@@ -463,8 +463,37 @@ $conn->close();
   </div>            
 </section>
 <!-- sidebar + content -->
-
-<!-- Modal for Van Details -->
+	<!-- FOOTER -->
+	<footer class="footer bg-dark mt-auto">
+        <div class="section__container footer__container">
+          <div class="footer__col">
+            <h3>VanGo</h3>
+            <p>
+              Van on the Go! Rent a van anytime, anywhere, wherever. 
+            </p>
+          </div>
+          <div class="footer__col">
+            <h4>Support</h4>
+            <p>FAQs</p>
+            <p>Terms & Conditions</p>
+            <p>Privacy Policy</p>
+            <p>Contact Us</p>
+          </div>
+          <div class="footer__col">
+            <h4>Address</h4>
+            <p>
+              <span>Address:</span> 456 Sta. Mesa, Manila 1000, Philippines
+            </p>
+            <p><span>Email:</span> info@vango.com</p>
+            <p><span>Phone:</span> +68 9876543210</p>
+          </div>
+        </div>
+        <div class="footer__bar">
+          Copyright © 2023 VanGo. All rights reserved.
+        </div>
+    </footer>
+	<!-- footer ends -->
+  <!-- Modal for Van Details -->
 <div class="modal fade" id="detailsModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -564,37 +593,6 @@ $conn->close();
   </div>
   
 </div>
-
-	<!-- FOOTER -->
-	<footer class="footer bg-dark mt-auto">
-        <div class="section__container footer__container">
-          <div class="footer__col">
-            <h3>VanGo</h3>
-            <p>
-              Van on the Go! Rent a van anytime, anywhere, wherever. 
-            </p>
-          </div>
-          <div class="footer__col">
-            <h4>Support</h4>
-            <p>FAQs</p>
-            <p>Terms & Conditions</p>
-            <p>Privacy Policy</p>
-            <p>Contact Us</p>
-          </div>
-          <div class="footer__col">
-            <h4>Address</h4>
-            <p>
-              <span>Address:</span> 456 Sta. Mesa, Manila 1000, Philippines
-            </p>
-            <p><span>Email:</span> info@vango.com</p>
-            <p><span>Phone:</span> +68 9876543210</p>
-          </div>
-        </div>
-        <div class="footer__bar">
-          Copyright © 2023 VanGo. All rights reserved.
-        </div>
-    </footer>
-	<!-- footer ends -->
 	
 	<!-- JAVASCRIPT -->
   <script src="https://kit.fontawesome.com/c08dde9054.js" crossorigin="anonymous"></script>
@@ -694,18 +692,6 @@ $conn->close();
                       var vanName = this.getAttribute("data-van-name");;
                       vanId = getVanIdByName(vanName);
                       var matchingReviews = getVanReviews(vanId);
-
-                      console.log(matchingReviews);
-                      console.log(vanId);
-
-                      console.log("vanPhoto:", "../registration/" + van.V_Photo);
-                      console.log("vanName:", van.V_Name ? van.V_Name.toUpperCase() : "");
-                      console.log("vanCapacity:", van.V_Capacity ? van.V_Capacity : "");
-                      console.log("plateNumber:", van.V_PlateNo ? van.V_PlateNo : "");
-                      console.log("ownerFullName:", van.O_FullName ? van.O_FullName : "");
-                      console.log("ownerAddress:", van.O_Address ? van.O_Address : "");
-                      console.log("ownerPhoneNo:", van.O_PhoneNo ? van.O_PhoneNo : "");
-                      console.log("dailyRate:", van.V_Rate ? van.V_Rate : "");
 
                       document.getElementById("vanPhoto").setAttribute("src", "../registration/" + van.V_Photo);
                       document.getElementById("vanName").innerText = van.V_Name ? van.V_Name.toUpperCase() + " " + (van.V_Year ? van.V_Year : "") : "";
