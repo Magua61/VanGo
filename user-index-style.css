@@ -123,6 +123,22 @@ body {
   .modal-lg .modal-dialog {
     max-width: 1200px; /* Adjust the value as needed */
   }
+
+/*********************Star Rating*******************/
+  .star-rating {
+    font-size: 24px;
+    color: #ffc107; /* Set the color for the filled stars */
+  }
+  
+  .star-rating .fa-star:hover {
+    color: #ffac33; /* Set the color for the stars on hover */
+  }
+  
+  .star-rating .fa-star.active {
+    color: #ffac33; /* Set the color for the selected stars */
+  }
+
+
 /*********************MAKE-IT-RESPONSIVE*******************/
 
 
