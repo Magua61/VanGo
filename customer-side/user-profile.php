@@ -543,22 +543,41 @@ $conn->close();
                                           <i class="far fa-star" data-value="5"></i>
                                         </div>
                                         <div class="form-group pb-2">
-                                            <textarea class="form-control" rows="4" placeholder="Write something here..."></textarea>
+                                            <textarea class="form-control" rows="4" id="reviewComment" name="reviewComment" placeholder="Write something here..."></textarea>
                                         </div>
                                         <div class=" form-outline d-flex">
                                             <i class="fa-solid fa-camera fa-lg pt-3 px-1"></i>
-                                            <input type="file" id="fileInput" class="form-control custom-file-input "  multiple>
+                                            <input type="file" id="fileInput" name="fileInput" class="form-control custom-file-input "  multiple>
                                         </div>
                                     </div>
 
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                                  <button type="button" class="btn btn-primary" name="ratingSubmit">Confirm</button>
+                                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="ratingSubmit" name="ratingSubmit">Confirm</button>
                                 </div>
                               </div>
                             </div>
                           </div>
+                                    
+                          <!-- MODAL ALERT -->
+                          <div class="modal fade" id="alertModal" tabindex="-1">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Alert</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <p><span id="alertContent"></span></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
                     </div>
                   </div>
                 </div>
@@ -618,6 +637,9 @@ $conn->close();
 	<script>
       const stars = document.querySelectorAll(".star-rating .fa-star");
       var vanRentals = <?php echo json_encode($vanRentals); ?>;
+      const ratingSubmitBtn = document.getElementById("ratingSubmit");
+      var rentalId;
+      var selectedStars;
       
       var container = document.querySelector('#cardContainer');
 
@@ -729,7 +751,7 @@ $conn->close();
         container.appendChild(card);
 
         card.addEventListener('click', () => {
-          const rentalId = card.dataset.rentalId;
+          rentalId = card.dataset.rentalId;
           const imageSrc = image.dataset.imageSrc;
 
           // Get the modal elements
@@ -761,10 +783,9 @@ $conn->close();
 
       });
 
-    
       stars.forEach((star, index) => {
         star.addEventListener("mouseover", () => {
-          const selectedStars = index + 1; // Add 1 to index to get the selected value
+          selectedStars = index + 1; // Add 1 to index to get the selected value
           console.log('Number of selected stars (mouseover):', selectedStars);
           addActiveStars(index);
         });
@@ -772,10 +793,45 @@ $conn->close();
     
         star.addEventListener("click", () => {
           addPermanentStars(index);
-          const selectedStars = index + 1; // Add 1 to index to get the selected value
+          selectedStars = index + 1; // Add 1 to index to get the selected value
           console.log('Number of selected stars (click):', selectedStars);
         });
       });
+
+      ratingSubmitBtn.addEventListener("click", function(event) {
+
+        // Retrieve the form data
+        const reviewComment = document.getElementById("reviewComment").value;
+        const fileInput = document.getElementById("fileInput").files;
+
+        // Construct the form data object
+        const formData = new FormData();
+        formData.append("rentalId", rentalId);
+        formData.append("reviewRating", selectedStars);
+        formData.append("reviewComment", reviewComment);
+        for (let i = 0; i < fileInput.length; i++) {
+          formData.append("fileInput[]", fileInput[i]);
+        }
+
+          // Perform the form submission using fetch or any other AJAX method
+        fetch("insertForReview.php", {
+          method: "POST",
+          body: formData
+        })
+          .then(response => response.json())
+          .then(data => {
+            
+            openAlertModalForm("Review Submitted Successfully!", "green"); 
+
+          })
+          .catch(error => {
+            
+            openAlertModalForm("An error occurred while submitting the review. Please try again.", "red"); 
+            // Handle the error
+        });
+
+      });
+
     
       function addActiveStars(index) {
         clearActiveStars();
@@ -802,6 +858,22 @@ $conn->close();
 
         });
       }
+
+      function openAlertModalForm(textContent, color) {
+        const modal = document.getElementById('alertModal');
+        const alertContent = document.getElementById('alertContent');
+        const modalTitle = modal.querySelector('.modal-title');
+
+        // Set the content of the alert
+        alertContent.textContent = textContent;
+        alertContent.style.color = color;
+        modalTitle.style.color = color;
+
+        // Open the modal
+        const bootstrapModal = new bootstrap.Modal(modal);
+        bootstrapModal.show();
+      }
+      
   </script>
 </body>
 </html>
