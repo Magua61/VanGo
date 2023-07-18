@@ -1,3 +1,215 @@
+<?php
+
+require_once '../db_connect.php';
+session_start();
+
+$errors = [];
+$errorFields = [];
+
+$query = "SELECT C.Customer_ID, C_FName, C_MName, C_LName, C_Gender, C_Address, C_Birthdate, C_Email, C_PhoneNo, C_ProfilePic, Hash_Password, Salt_Password, User_RegiDatetime
+          FROM customer C 
+          LEFT JOIN customer_profile CP
+            ON C.Customer_ID = CP.Customer_ID
+          JOIN user U
+            ON C.C_Email = U.User_Email
+          JOIN password P
+            ON U.User_Email = P.User_Email
+          WHERE C.Customer_ID = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $_SESSION['customerid']);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$customer = $result->fetch_assoc();
+
+$query = "SELECT R.Rental_ID, V.Van_ID, R.Customer_ID, V_Photo, concat_ws(' ', V_Make, V_Model, V_Year) as 'V_Name', V_Capacity, 
+            concat_ws(' ', O_FName, O_LName) as 'O_FullName', O_Address, O_PhoneNo, V_PlateNo, Pickup_Date, Return_Date, Payment_Amount, Rental_Status
+          FROM owner O JOIN van V ON
+            O.Owner_ID = V.Owner_ID
+          LEFT JOIN van_rate VR ON
+            V.Van_ID = VR.Van_ID
+          LEFT JOIN van_photo VP ON
+            V.Van_ID = VP.Van_ID
+          JOIN rental R ON
+            V.Van_ID = R.Van_ID
+          JOIN payment P ON
+            R.Rental_ID = P.Rental_ID
+          WHERE R.Customer_ID = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $_SESSION['customerid']);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$vanRentals = [];
+while ($row = $result->fetch_assoc()) {
+    $vanRentals[] = $row;
+}
+
+$joinedDate = date('d M Y', strtotime($customer['User_RegiDatetime']));
+$fullName = $customer['C_FName'].' '.$customer['C_LName'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+
+  $profilePhoto = $_FILES['profilePhoto']['name'];
+  $profilePhotoTmp = $_FILES['profilePhoto']['tmp_name'];
+  $fName = $conn->real_escape_string($_POST['fName']);
+  $mName = $conn->real_escape_string($_POST['mName']);
+  $lName = $conn->real_escape_string($_POST['lName']);
+  $birthday = $conn->real_escape_string($_POST['birthday']);
+  $email = $conn->real_escape_string($_POST['email']);
+  $phone = $conn->real_escape_string($_POST['phone']);
+  $address = $conn->real_escape_string($_POST['address']);
+  $currentPassword = $conn->real_escape_string($_POST['currentPassword']);
+  $newPassword = $conn->real_escape_string($_POST['newPassword']);
+  $confirmPassword = $conn->real_escape_string($_POST['confirmPassword']);
+
+  $hashPassword = $customer['Hash_Password'];
+  $saltPassword = $customer['Salt_Password'];
+
+  $currentPasswordCheck = hash('sha256', $currentPassword . $saltPassword);
+
+  // Verify the entered password
+  if ($currentPasswordCheck !== $hashPassword && ($currentPassword !== '')) {
+    $errors[] = "Current password is incorrect.";
+    $errorFields[] = "currentPassword";
+  }
+  // Validate password
+  if ($currentPassword !== '' && $newPassword !== '' && !validateAlphanumericLength($newPassword, 8, 32)) {
+    $errors[] = "Password must be between 8 and 32 alphanumeric characters.";
+    $errorFields[] = "newPassword";
+  }
+  if(($currentPassword === '') && ($newPassword !== '' || $confirmPassword !== '')) {
+    $errors[] = "Enter the current password first.";
+    $errorFields[] = "confirmPassword";
+   }
+  if ($newPassword !== $confirmPassword && $currentPassword !== '') {
+    $errors[] = "Password and Confirm Password must match.";
+    $errorFields[] = "confirmPassword";
+  }
+  if (!validatePhoneNumber($phone)) {
+    $errors[] = "Phone number must start with '09' and have a total of 11 digits.";
+    $errorFields[] = "phone";
+  }
+  if ($customer['C_Email'] !== $email && checkEmailExists($email)) {
+    $errors[] = "Email already exists. Please choose a different email.";
+    $errorFields[] = "email";
+  }
+
+  $destinationFolder = '../registration/uploads/profiles/';
+  $profilePhotoUpload = uploadFile('profilePhoto', $destinationFolder);
+  $profilePhotoPath = $destinationFolder . $profilePhotoUpload['fileName'];
+
+  if (empty($errors)) {
+    if(is_null($customer['C_ProfilePic'])){
+        $query = "INSERT INTO customer_profile(Customer_ID, C_ProfilePic) VALUES (?,?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("is", $_SESSION['customerid'], $profilePhotoPath);
+        $stmt->execute();
+
+    }
+    if(!empty($_FILES['profilePhoto']['name'])){
+        $query = "UPDATE customer_profile SET C_ProfilePic=? WHERE Customer_ID=?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("si", $profilePhotoPath, $_SESSION['customerid']);
+        $stmt->execute();
+    }
+    if(    
+      $fName !== $customer['C_FName'] ||
+      $mName !== $customer['C_MName'] ||
+      $lName !== $customer['C_LName'] ||
+      $address !== $customer['C_Address'] ||
+      $birthday !== $customer['C_Birthdate'] ||
+      $email !== $customer['C_Email'] ||
+      $phone !== $customer['C_PhoneNo']
+    ){
+        $query = "UPDATE customer SET C_FName=?, C_MName=?, C_LName=?, C_Address=?, 
+                  C_Birthdate=?, C_Email=?, C_PhoneNo=? WHERE Customer_ID=?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("sssssssi", $fName, $mName, $lName, $address, $birthday, $email, $phone, $_SESSION['customerid']);
+        $stmt->execute();
+
+    }
+    if($currentPassword !== '' && $newPassword !== '' && $confirmPassword !== ''){
+        $saltPassword = $customer['Salt_Password'];
+        $newHashPassword = hash('sha256', $newPassword . $saltPassword);
+
+        $query = "UPDATE password SET Hash_Password=? WHERE User_Email=?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ss", $newHashPassword, $customer['C_Email']);
+        $stmt->execute();
+    }
+    
+    header("Location: user-profile.php");
+    exit();
+
+  }
+
+}
+
+function uploadFile($fileField, $destinationFolder)
+{
+    $errors = [];
+    $errorFields = [];
+
+    // Check file size
+    $maxFileSize = 50 * 1024 * 1024; // 50mb
+    if ($_FILES[$fileField]['size'] > $maxFileSize) {
+        $errors[] = "File size exceeds the maximum limit of " . ($maxFileSize / (1024 * 1024)) . "MB.";
+        $errorFields[] = $fileField;
+    }
+
+    if (!empty($fileField) && isset($_FILES[$fileField]['tmp_name']) && $_FILES[$fileField]['tmp_name'] !== '') {
+      $allowedFileTypes = ['image/jpeg', 'image/png'];
+      $fileType = mime_content_type($_FILES[$fileField]['tmp_name']);
+      if (!in_array($fileType, $allowedFileTypes)) {
+          $errors[] = "Only " . implode(", ", $allowedFileTypes) . " file types are allowed.";
+          $errorFields[] = $fileField;
+      }
+   }
+  
+
+    // Generate a unique filename
+    $fileName = uniqid() . '_' . $_FILES[$fileField]['name'];
+
+    // Move the uploaded file to the desired location
+    $destination = $destinationFolder . $fileName;
+    if (!move_uploaded_file($_FILES[$fileField]['tmp_name'], $destination)) {
+        $errors[] = "Error occurred while uploading the file. Please try again later.";
+        $errorFields[] = $fileField;
+    }
+
+    return [
+        'errors' => $errors,
+        'errorFields' => $errorFields,
+        'fileName' => $fileName
+    ];
+}
+function validatePhoneNumber($value)
+{
+    return preg_match('/^09\d{9}$/', $value);
+}
+
+function checkEmailExists($email)
+{
+    global $conn;
+
+    $query = "SELECT * FROM user WHERE User_Email=?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+    return $result->num_rows > 0;
+}
+function validateAlphanumericLength($value, $minLength, $maxLength)
+{
+    return preg_match('/^[a-zA-Z0-9!@#$%^&*()\-_]+$/', $value) && strlen($value) >= $minLength && strlen($value) <= $maxLength;
+}
+
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,23 +325,25 @@
                     <div class="col-12 col-sm-auto mb-3">
                       <div class="mx-auto" style="width: 140px;">
                         <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
-                          <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
+                          <img src="<?php echo $customer['C_ProfilePic']; ?>" alt="Customer Photo" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                       </div>
                     </div>
                     <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
                       <div class=" text-sm-left mb-2 mb-sm-0">
-                        <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">Juan Dela Cruz</h4>
-                        <p class="mb-0 text-muted">@juandelacruz@example.com</p>
-                        <div class="mt-2">
-                          <button class="btn btn-primary" type="button">
-                            <i class="fa fa-fw fa-camera"></i>
-                            <span>Change Photo</span>
-                          </button>
-                        </div>
+                        <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap"><?php echo $fullName; ?></h4>
+                        <p class="mb-0 text-muted"><?php echo $customer['C_Email']; ?></p>
+                          <div class="mt-2">
+                          <form action="user-profile.php" method="POST" enctype="multipart/form-data">
+                            <label for="profilePhoto" class="btn btn-primary">
+                              <i class="fa fa-fw fa-camera"></i>
+                              <span>Change Photo</span>
+                            </label>
+                            <input name="profilePhoto" id="profilePhoto" type="file" style="display: none;">
+                          </div>
                       </div>
                       <div class="text-center text-sm-right">
-                        <div class="text-muted"><small>Joined 09 Dec 2017</small></div>
+                        <div class="text-muted"><small>Joined <?php echo $joinedDate; ?></small></div>
                       </div>
                     </div>
                   </div>
@@ -139,159 +353,128 @@
                   </ul>
                   <div class="tab-content pt-3">
                     <div class="tab-pane active" id="profile">
-                      <form class="form" novalidate="">
-                        <div class="row">
-                          <div class="col">
-                            <div class="row">
-                              <div class="col-lg-4">
-                                <div class="form-group">
-                                  <label>First Name</label>
-                                  <input class="form-control" type="text" name="name" placeholder="Juan" >
-                                </div>
-                              </div>
-                              <div class="col-lg-4">
-                                <div class="form-group">
-                                  <label>Middle Name</label>
-                                  <input class="form-control" type="text" name="name" placeholder="Dela">
-                                </div>
-                              </div>
-                              <div class="col-lg-4">
-                                <div class="form-group">
-                                  <label>Last Name</label>
-                                  <input class="form-control" type="text" name="name" placeholder="Cruz">
-                                </div>
+                    <?php if (!empty($errors)) : ?>
+                                <ul class="error" style="color: red;" >
+                                    <?php foreach ($errors as $error) : ?>
+                                        <li><?php echo $error; ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
+                      <div class="row">
+                        <div class="col">
+                          <div class="row">
+                            <div class="col-lg-4">
+                              <div class="form-group">
+                                <label for="fName">First Name</label>
+                                <input class="form-control" type="text" name="fName" value="<?php echo $customer['C_FName']; ?>" required>
                               </div>
                             </div>
-                            <div class="row">
-                              <div class="col-lg-4">
-                                <div class="form-group">
-                                  <label>Birthday</label>
-                                  <input class="form-control " type="date" value="2001-01-04">
-                                </div>
-                              </div>
-                              <div class="col-lg-4">
-                                <div class="form-group">
-                                  <label>Email</label>
-                                  <input class="form-control " type="email" placeholder="user@example.com">
-                                </div>
-                              </div>
-                              <div class="col-lg-4">
-                                <div class="form-group">
-                                  <label>Phone</label>
-                                  <input class="form-control" type="text" placeholder="0912345678">
-                                </div>
+                            <div class="col-lg-4">
+                              <div class="form-group">
+                                <label for="mName">Middle Name</label>
+                                <input class="form-control" type="text" name="mName" value="<?php echo $customer['C_MName']; ?>" required>
                               </div>
                             </div>
-                            <div class="row">
-                              <div class="col mb-3">
-                                <div class="form-group">
-                                  <label>Address</label>
-                                  <textarea class="form-control" rows="3" placeholder="Lt. 123 Blk. 1"></textarea>
+                            <div class="col-lg-4">
+                              <div class="form-group">
+                                <label for="lName">Last Name</label>
+                                <input class="form-control" type="text" name="lName" value="<?php echo $customer['C_LName']; ?>" required>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-4">
+                              <div class="form-group">
+                                <label for="birthday">Birthday</label>
+                                <input class="form-control" type="date" name="birthday" value="<?php echo $customer['C_Birthdate']; ?>" required>
+                              </div>
+                            </div>
+                            <div class="col-lg-4">
+                              <div class="form-group">
+                                <label for="email">Email</label>
+                                <input class="form-control" type="email" name="email" value="<?php echo $customer['C_Email']; ?>" required>
+                              </div>
+                            </div>
+                            <div class="col-lg-4">
+                              <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input class="form-control" type="text" name="phone" value="<?php echo $customer['C_PhoneNo']; ?>" required>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col mb-3">
+                              <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea class="form-control" rows="3" name="address" required><?php echo $customer['C_Address']; ?> </textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12 col-sm-6 mb-3">
+                          <div class="mb-2"><b>Change Password</b></div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input class="form-control" type="password" name="currentPassword" >
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input class="form-control" type="password" name="newPassword" >
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input class="form-control" type="password" name="confirmPassword">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12 col-sm-5 offset-sm-1 mb-3">
+                          <div class="mb-2"><b>Keeping in Touch</b></div>
+                          <div class="row">
+                            <div class="col">
+                              <label>Email Notifications</label>
+                              <div class="custom-controls-stacked px-2">
+                                <div class="custom-control custom-checkbox">
+                                  <input type="checkbox" class="custom-control-input" id="notifications-blog" checked="">
+                                  <label class="custom-control-label" for="notifications-blog">Blog posts</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                  <input type="checkbox" class="custom-control-input" id="notifications-news" checked="">
+                                  <label class="custom-control-label" for="notifications-news">Newsletter</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                  <input type="checkbox" class="custom-control-input" id="notifications-offers" checked="">
+                                  <label class="custom-control-label" for="notifications-offers">Personal Offers</label>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-12 col-sm-6 mb-3">
-                            <div class="mb-2"><b>Change Password</b></div>
-                            <div class="row">
-                              <div class="col">
-                                <div class="form-group">
-                                  <label>Current Password</label>
-                                  <input class="form-control" type="password" placeholder="••••••">
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col">
-                                <div class="form-group">
-                                  <label>New Password</label>
-                                  <input class="form-control" type="password" placeholder="••••••">
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col">
-                                <div class="form-group">
-                                  <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
-                                  <input class="form-control" type="password" placeholder="••••••"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-12 col-sm-5 offset-sm-1 mb-3">
-                            <div class="mb-2"><b>Keeping in Touch</b></div>
-                            <div class="row">
-                              <div class="col">
-                                <label>Email Notifications</label>
-                                <div class="custom-controls-stacked px-2">
-                                  <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notifications-blog" checked="">
-                                    <label class="custom-control-label" for="notifications-blog">Blog posts</label>
-                                  </div>
-                                  <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notifications-news" checked="">
-                                    <label class="custom-control-label" for="notifications-news">Newsletter</label>
-                                  </div>
-                                  <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notifications-offers" checked="">
-                                    <label class="custom-control-label" for="notifications-offers">Personal Offers</label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                      </div>
+                      <div class="row">
+                        <div class="col d-flex justify-content-end">
+                          <button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
                         </div>
-                        <div class="row">
-                          <div class="col d-flex justify-content-end">
-                            <button class="btn btn-primary" type="submit">Save Changes</button>
-                          </div>
-                        </div>
-                      </form>
-    
+                      </div>
+                    </form>
                     </div>
 
                     <div class="tab-pane" id="history">
 
-                        <div class="card row shadow mb-2" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#vandetailsModal">
-                            <div class="card-body">
-                                <div class="row flex-row d-flex">
-                                <div class="col-lg-2">
-                                <img src="assets/van1.jpg" class="w-100 h-100 img-thumbnail">
-                                </div>
-                                <div class="col-lg-10">
-                                    <div class="row">
-                                    <a href="#">Toyota Hiace Super Grandia 2023</a>
-                                    </div>
-                                    <div class="row">
-                                    <span class="text-muted">From: 07-27-2023 To: 08-03-2023</span>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="card row shadow mb-2" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#vandetailsModal">
-                            <div class="card-body">
-                                <div class="row flex-row d-flex">
-                                <div class="col-lg-2">
-                                <img src="assets/van1.jpg" class="w-100 h-100 img-thumbnail">
-                                </div>
-                                <div class="col-lg-10">
-                                    <div class="row">
-                                    <a href="#">Toyota Hiace Super Grandia 2023</a>
-                                    </div>
-                                    <div class="row">
-                                    <span class="text-muted">From: 07-27-2023 To: 08-03-2023</span>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        
-
+                      <div id="cardContainer"></div>
+                      
                         <!-- MODAL FOR DETAILS-->
                         <div class="modal fade" id="vandetailsModal" tabindex="-1" role="dialog" aria-labelledby="vandetailsModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl" role="document">
@@ -305,11 +488,10 @@
                                 <div class="modal-body">
                                     <div class="row">
                                     <div class="col-lg-5 border-end">
-                                        <img src="assets/van2.jpg" class="w-100 h-auto img-thumbnail mb-1 shadow">
+                                        <img class="w-100 h-auto img-thumbnail mb-1 shadow" id="modalImage" >
                                     </div>
                                     <div class="col-lg-5 ">
-                                        <h4 class="border-bottom">Toyota Hiace Super Grandia 2023</h4>
-                                        <p>Van: <span id="vanName"></span></p>
+                                        <h4 class="border-bottom"><span id="vanName"></span></h4>
                                         <p>Capacity: <span id="vanCapacity"></span></p>
                                         <p>Plate Number: <span id="plateNumber"></span></p>
                                         <p>Owner's Full Name: <span id="ownerFullName"></span></p>
@@ -354,11 +536,11 @@
                                     <div class="row">
                                         <h5>Quality of Service</h5>
                                         <div class="star-rating">
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
+                                          <i class="far fa-star" data-value="1"></i>
+                                          <i class="far fa-star" data-value="2"></i>
+                                          <i class="far fa-star" data-value="3"></i>
+                                          <i class="far fa-star" data-value="4"></i>
+                                          <i class="far fa-star" data-value="5"></i>
                                         </div>
                                         <div class="form-group pb-2">
                                             <textarea class="form-control" rows="4" placeholder="Write something here..."></textarea>
@@ -372,7 +554,7 @@
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                                  <button type="button" class="btn btn-primary">Confirm</button>
+                                  <button type="button" class="btn btn-primary" name="ratingSubmit">Confirm</button>
                                 </div>
                               </div>
                             </div>
@@ -434,45 +616,192 @@
 	
 	<!-- JAVASCRIPT -->
 	<script>
-        const stars = document.querySelectorAll(".star-rating .fa-star");
-        
+      const stars = document.querySelectorAll(".star-rating .fa-star");
+      var vanRentals = <?php echo json_encode($vanRentals); ?>;
       
-        stars.forEach((star, index) => {
-          star.addEventListener("mouseover", () => {
-            addActiveStars(index);
-          });
-      
-      
-          star.addEventListener("click", () => {
-            addPermanentStars(index);
-          });
+      var container = document.querySelector('#cardContainer');
+
+      // Loop through the 'vanRentals' array and generate the HTML structure for each card
+      vanRentals.forEach((rental) => {
+        // Create the card element
+        const card = document.createElement('div');
+        card.classList.add('card', 'row', 'shadow', 'mb-2');
+        card.style.cursor = 'pointer';
+        card.setAttribute('data-bs-toggle', 'modal');
+        card.setAttribute('data-bs-target', '#vandetailsModal');
+
+        // Create the card body
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+
+        // Create the flex row
+        const flexRow = document.createElement('div');
+        flexRow.classList.add('row', 'flex-row', 'd-flex');
+
+        // Create the image column
+        const imageCol = document.createElement('div');
+        imageCol.classList.add('col-lg-2');
+
+        // Create the image element
+        const image = document.createElement('img');
+        image.src = '../registration/' + rental.V_Photo;
+        image.classList.add('w-100', 'h-100', 'img-thumbnail');
+        image.dataset.imageSrc = image.src;
+
+        // Append the image element to the image column
+        imageCol.appendChild(image);
+
+        // Create the details column
+        const detailsCol = document.createElement('div');
+        detailsCol.classList.add('col-lg-8'); // Adjust the width based on your desired layout
+
+        // Create the title row
+        const titleRow = document.createElement('div');
+        titleRow.classList.add('row');
+        titleRow.innerHTML = `<a href="#">${rental.V_Name}</a>`;
+
+        // Create the date row
+        const dateRow = document.createElement('div');
+        dateRow.classList.add('row');
+
+        // Format the pickup date
+        const pickupDate = new Date(rental.Pickup_Date);
+        const formattedPickupDate = pickupDate.toLocaleDateString('en-US', {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric'
+        }).replace(/\//g, '-').replace(/^(.*?)\-(\d{1})\-([0-9]{2})$/, "$1-0$2-$3");
+
+        // Format the return date
+        const returnDate = new Date(rental.Return_Date);
+        const formattedReturnDate = returnDate.toLocaleDateString('en-US', {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric'
+        }).replace(/\//g, '-').replace(/^(.*?)\-(\d{1})\-([0-9]{2})$/, "$1-0$2-$3");
+
+        // Set the formatted dates in the date row
+        dateRow.innerHTML = `<span class="text-muted">From: ${formattedPickupDate} To: ${formattedReturnDate}</span>`;
+
+        // Append the title row and date row to the details column
+        detailsCol.appendChild(titleRow);
+        detailsCol.appendChild(dateRow);
+
+        // Create the status column
+        const statusCol = document.createElement('div');
+        statusCol.classList.add('col-lg-2', 'text-end'); // Adjust the width and alignment based on your desired layout
+
+        // Create the status element
+        const status = document.createElement('span');
+        status.classList.add('fw-bold');
+
+        // Set the text content and color based on the rental status
+        if (rental.Rental_Status === 'Cancelled') {
+          status.textContent = rental.Rental_Status;
+          status.classList.add('text-danger'); // Set color to red
+        } else if (rental.Rental_Status === 'Pending') {
+          status.textContent = rental.Rental_Status;
+          status.classList.add('text-warning'); // Set color to orange
+        } else if (rental.Rental_Status === 'Done') {
+          status.textContent = rental.Rental_Status;
+          status.classList.add('text-success'); // Set color to green
+        } else {
+          status.textContent = 'Unknown Status';
+          // Set a default color or handle other statuses as needed
+        }
+
+        // Append the status element to the status column
+        statusCol.appendChild(status);
+
+        // Append the image column, details column, and status column to the flex row
+        flexRow.appendChild(imageCol);
+        flexRow.appendChild(detailsCol);
+        flexRow.appendChild(statusCol);
+
+        // Append the flex row to the card body
+        cardBody.appendChild(flexRow);
+
+        // Append the card body to the card
+        card.appendChild(cardBody);
+        card.dataset.rentalId = rental.Rental_ID;
+
+        // Append the card to the container
+        container.appendChild(card);
+
+        card.addEventListener('click', () => {
+          const rentalId = card.dataset.rentalId;
+          const imageSrc = image.dataset.imageSrc;
+
+          // Get the modal elements
+          const modalImage = document.querySelector('#modalImage');
+          const modalVanName = document.querySelector('#vanName');
+          const modalVanCapacity = document.querySelector('#vanCapacity');
+          const modalPlateNumber = document.querySelector('#plateNumber');
+          const modalOwnerFullName = document.querySelector('#ownerFullName');
+          const modalOwnerAddress = document.querySelector('#ownerAddress');
+          const modalOwnerPhoneNo = document.querySelector('#ownerPhoneNo');
+          const modalStartDate = document.querySelector('#startDate');
+          const modalEndDate = document.querySelector('#endDate');
+          const modalTotal = document.querySelector('#total');
+
+          // Set the rental data as attributes of the modal elements
+          modalImage.src = imageSrc;
+          modalVanName.textContent = rental.V_Name;
+          modalVanCapacity.textContent = rental.V_Capacity;
+          modalPlateNumber.textContent = rental.V_PlateNo;
+          modalOwnerFullName.textContent = rental.O_FullName;
+          modalOwnerAddress.textContent = rental.O_Address; 
+          modalOwnerPhoneNo.textContent = rental.O_PhoneNo;
+          modalStartDate.textContent = formattedPickupDate;
+          modalEndDate.textContent = formattedReturnDate;
+          modalTotal.textContent = rental.Payment_Amount;
+
+          console.log(rentalId);
         });
-      
-        function addActiveStars(index) {
+
+      });
+
+    
+      stars.forEach((star, index) => {
+        star.addEventListener("mouseover", () => {
+          const selectedStars = index + 1; // Add 1 to index to get the selected value
+          console.log('Number of selected stars (mouseover):', selectedStars);
+          addActiveStars(index);
+        });
+    
+    
+        star.addEventListener("click", () => {
+          addPermanentStars(index);
+          const selectedStars = index + 1; // Add 1 to index to get the selected value
+          console.log('Number of selected stars (click):', selectedStars);
+        });
+      });
+    
+      function addActiveStars(index) {
+        clearActiveStars();
+        for (let i = 0; i <= index; i++) {
+          stars[i].classList.add("text-warning","fas");
+          
+        }
+      }
+
+      function addPermanentStars(index) {
           clearActiveStars();
-          for (let i = 0; i <= index; i++) {
-            stars[i].classList.add("text-warning","fas");
-            
-          }
+        for (let i = 0; i <= index; i++) {
+          stars[i].classList.remove("far");
+          stars[i].classList.add("text-warning","fas");
+          
         }
+      }
+    
+      function clearActiveStars() {
+        stars.forEach((star) => {
 
-        function addPermanentStars(index) {
-            clearActiveStars();
-          for (let i = 0; i <= index; i++) {
-            stars[i].classList.remove("far");
-            stars[i].classList.add("text-warning","fas");
-            
-          }
-        }
-      
-        function clearActiveStars() {
-          stars.forEach((star) => {
+          star.classList.add("far");
+          star.classList.remove("text-warning","fas");
 
-            star.classList.add("far");
-            star.classList.remove("text-warning","fas");
-
-          });
-        }
-      </script>
+        });
+      }
+  </script>
 </body>
 </html>

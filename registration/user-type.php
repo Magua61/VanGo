@@ -3,6 +3,8 @@
 require_once '../db_connect.php';
 session_start();
 
+date_default_timezone_set('Asia/Manila');
+$currentDateTime = date('Y-m-d H:i:s');
 $fName = $_SESSION['fName'];
 $mName = $_SESSION['mName'];
 $lName = $_SESSION['lName'];
@@ -20,9 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $accountType = $_POST["account_type"];
 
     // Insert the data into the user table
-    $query = "INSERT INTO user (User_Email, User_Type) VALUES (?, ?)";
+    $query = "INSERT INTO user (User_Email, User_Type, User_RegiDatetime) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ss", $email, $accountType);
+    $stmt->bind_param("sss", $email, $accountType, $currentDateTime);
     $stmt->execute();
 
     // Insert the password data into the password table
