@@ -138,7 +138,15 @@ body {
     color: #ffac33; /* Set the color for the selected stars */
   }
 
-
+  .label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
 /*********************MAKE-IT-RESPONSIVE*******************/
 
 

@@ -482,46 +482,5 @@
 	<!-- footer ends -->
 	
 	<!-- JAVASCRIPT -->
-	<script>
-        const stars = document.querySelectorAll(".star-rating .fa-star");
-        
-      
-        stars.forEach((star, index) => {
-          star.addEventListener("mouseover", () => {
-            addActiveStars(index);
-          });
-      
-      
-          star.addEventListener("click", () => {
-            addPermanentStars(index);
-          });
-        });
-      
-        function addActiveStars(index) {
-          clearActiveStars();
-          for (let i = 0; i <= index; i++) {
-            stars[i].classList.add("text-warning","fas");
-            
-          }
-        }
-
-        function addPermanentStars(index) {
-            clearActiveStars();
-          for (let i = 0; i <= index; i++) {
-            stars[i].classList.remove("far");
-            stars[i].classList.add("text-warning","fas");
-            
-          }
-        }
-      
-        function clearActiveStars() {
-          stars.forEach((star) => {
-
-            star.classList.add("far");
-            star.classList.remove("text-warning","fas");
-
-          });
-        }
-      </script>
 </body>
 </html>
