@@ -20,6 +20,7 @@ body {
 .section-padding {
   padding: 100px 0;
 }
+
 /********************** NAVIGATION BAR ***********************/
 
 /********************** FOOTER ***********************/
@@ -124,4 +125,8 @@ body {
   .footer__container {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+.fc-event {
+  cursor: pointer;
 }
