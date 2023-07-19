@@ -311,6 +311,78 @@
                                     </div>
                                     <div class="col-lg-2 align-items-center justify-content-center border-start">
                                         <div class="row w-100">
+                                        <button class="btn btn-primary mb-2 mx-2 shadow" data-bs-toggle="modal" data-bs-target="#updatevehicleModal">Update</button>
+                                        </div>
+                                        <div class="row w-100">
+                                        <button class="btn btn-danger mb-2 mx-2 shadow">Disable</button>
+                                        </div>
+                                        <div class="row w-100">
+                                        <button class="btn btn-light mb-2 mx-2 shadow" data-bs-toggle="modal" data-bs-target="#vanratingsModal"><i class="fas fa-star text-warning"></i>Ratings</button>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary shadow" data-bs-dismiss="modal">Back</button>
+                                  <button type="button" class="btn btn-primary shadow">Save Changes</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- MODAL FOR Update-->
+                        <div class="modal fade" id="updatevehicleModal" tabindex="-1" role="dialog" aria-labelledby="updatevehicleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="updatevehicleModalLabel">Edit Details</h5>
+                                  <button type="button" class="close btn btn-light" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                    <div class="col-lg-5 border-end">
+                                        <label for="fileInput" style="cursor: pointer;">
+                                        <img src="assets/van2.jpg" class="w-100 h-auto img-thumbnail mb-1 shadow">
+                                        <div class="label text-center bg-dark text-white rounded shadow">Edit Image</div>
+                                          </label>
+                                          <input type="file" id="fileInput" class="d-none" multiple>
+                                    </div>
+                                    <div class="col-lg-5 ">
+                                        <h4 class="border-bottom">Toyota Hiace Super Grandia 2023</h4>
+                                        <p>Model: <input class="form-control " type="text" placeholder="Hiace Super Grandia"></p>
+                                        <p>Make: <input class="form-control " type="text" placeholder="Toyota"></p>
+                                        <p>Capacity: <input class="form-control " type="text" placeholder="12"></p>
+                                        <p>Plate Number: <input class="form-control " type="text" placeholder="123ABC"></p>
+                                        <p>Rate: ₱<input class="form-control " type="number" placeholder="123"></p>
+                                        <div class="row">
+                                          <p class="border-top mt-2">Documents</p>
+                                          <div class="container col-lg-5 ">
+                                            <div class="row justify-content-center align-items-center" style="cursor: pointer;">
+                                                <label for="fileInput" class="border row justify-content-center align-items-center" style="cursor: pointer;">
+                                                <img src="assets/doc2.png" class="w-75 h-auto " alt="Image" data-bs-toggle="modal" data-bs-target="#imageModal">
+                                                <div class="label text-center bg-dark text-white"><i class="fa-solid fa-pen"></i>Certificate of Registration</div>
+                                                </label>
+                                                <input type="file" id="fileInput" class="d-none" multiple>
+                                            </div>
+                                          </div>
+                                          <div class="container col-lg-5 ">
+                                            <div class="row justify-content-center align-items-center" style="cursor: pointer;">
+                                                <label for="fileInput" class="border row justify-content-center align-items-center" style="cursor: pointer;">
+                                                <img src="assets/doc2.png" class="w-75 h-auto" alt="Image" data-bs-toggle="modal" data-bs-target="#imageModal">
+                                                <div class="label text-center bg-dark text-white"><i class="fa-solid fa-pen"></i>Official Receipt of Registration</div>
+                                                </label>
+                                                <input type="file" id="fileInput" class="d-none" multiple>
+                                            </div>
+                                          </div>
+                                          
+                                       
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 align-items-center justify-content-center border-start">
+                                        <div class="row w-100">
                                         <button class="btn btn-primary mb-2 mx-2 shadow">Update</button>
                                         </div>
                                         <div class="row w-100">
@@ -330,6 +402,7 @@
                               </div>
                             </div>
                           </div>
+
                             <!-- MODAL FOR RATINGS-->
                           <div class="modal fade" id="vanratingsModal" tabindex="-1" role="dialog" aria-labelledby="vanratingsModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl" role="document">
