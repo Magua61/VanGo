@@ -23,7 +23,7 @@ $result = $stmt->get_result();
 $customer = $result->fetch_assoc();
 
 $query = "SELECT R.Rental_ID, V.Van_ID, R.Customer_ID, V_Photo, concat_ws(' ', V_Make, V_Model, V_Year) as 'V_Name', V_Capacity, 
-            concat_ws(' ', O_FName, O_LName) as 'O_FullName', O_Address, O_PhoneNo, V_PlateNo, Pickup_Date, Return_Date, Payment_Amount, Rental_Status
+            concat_ws(' ', O_FName, O_LName) as 'O_FullName', O_Address, O_PhoneNo, V_PlateNo, Pickup_Date, Pickup_Time, Return_Date, Return_Time, Payment_Amount, Rental_Status
           FROM owner O JOIN van V ON
             O.Owner_ID = V.Owner_ID
           LEFT JOIN van_rate VR ON
@@ -34,7 +34,8 @@ $query = "SELECT R.Rental_ID, V.Van_ID, R.Customer_ID, V_Photo, concat_ws(' ', V
             V.Van_ID = R.Van_ID
           JOIN payment P ON
             R.Rental_ID = P.Rental_ID
-          WHERE R.Customer_ID = ?";
+          WHERE R.Customer_ID = ?
+          ORDER BY Pickup_Date DESC";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $_SESSION['customerid']);
 $stmt->execute();
@@ -503,21 +504,17 @@ $conn->close();
                                     </div>
                                     <div class="col-lg-2 align-items-center justify-content-center border-start">
                                         <div class="row w-100">
-                                        <button class="btn btn-primary mb-2 mx-2 shadow">Reschedule</button>
+                                        <button class="btn btn-danger mb-2 mx-2 shadow" id="cancelRentalButton" data-bs-toggle="modal" data-bs-target="#confirmationModal" >Cancel</button>
                                         </div>
                                         <div class="row w-100">
-                                        <button class="btn btn-danger mb-2 mx-2 shadow">Cancel</button>
-                                        </div>
-                                        <div class="row w-100">
-                                        <button class="btn btn-light mb-2 mx-2 shadow" data-bs-toggle="modal" data-bs-target="#ratevanModal"><i class="fas fa-star text-warning"></i> Rate now</button>
+                                        <button class="btn btn-light mb-2 mx-2 shadow" id="rateNowButton" data-bs-toggle="modal" data-bs-target="#ratevanModal"><i class="fas fa-star text-warning"></i> Rate now</button>
                                         </div>
                                     </div>
                                     </div>
 
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary shadow" data-bs-dismiss="modal">Back</button>
-                                  <button type="button" class="btn btn-primary shadow">Confirm</button>
+                                  <button type="button" class="btn btn-secondary shadow" data-bs-dismiss="modal">Close</button>
                                 </div>
                               </div>
                             </div>
@@ -559,7 +556,44 @@ $conn->close();
                               </div>
                             </div>
                           </div>
-                                    
+
+                          <!-- MODAL CONFIRM -->
+                          <div class="modal fade" id="confirmationModal" tabindex="-1">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Confirmation</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <p><span id="confirmContent">Are you sure you want to cancel this rental? This action cannot be undone.</span></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                                  <button type="button" class="btn btn-danger" id="confirmSubmit" name="confirmSubmit" data-bs-dismiss="modal">Confirm</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                                                              
+                          <!-- MODAL REFUND -->
+                          <div class="modal fade" id="refundModal" tabindex="-1">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Refund</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <p><span id="refundContent">Please note that a refund will be processed for the cancelled rental. Our team will reach out to you shortly regarding the refund.</span></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
                           <!-- MODAL ALERT -->
                           <div class="modal fade" id="alertModal" tabindex="-1">
                             <div class="modal-dialog">
@@ -634,154 +668,16 @@ $conn->close();
 	<!-- footer ends -->
 	
 	<!-- JAVASCRIPT -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 	<script>
       const stars = document.querySelectorAll(".star-rating .fa-star");
       var vanRentals = <?php echo json_encode($vanRentals); ?>;
       const ratingSubmitBtn = document.getElementById("ratingSubmit");
+      const confirmSubmitBtn = document.getElementById("confirmSubmit");
       var rentalId;
       var selectedStars;
-      
       var container = document.querySelector('#cardContainer');
-
-      // Loop through the 'vanRentals' array and generate the HTML structure for each card
-      vanRentals.forEach((rental) => {
-        // Create the card element
-        const card = document.createElement('div');
-        card.classList.add('card', 'row', 'shadow', 'mb-2');
-        card.style.cursor = 'pointer';
-        card.setAttribute('data-bs-toggle', 'modal');
-        card.setAttribute('data-bs-target', '#vandetailsModal');
-
-        // Create the card body
-        const cardBody = document.createElement('div');
-        cardBody.classList.add('card-body');
-
-        // Create the flex row
-        const flexRow = document.createElement('div');
-        flexRow.classList.add('row', 'flex-row', 'd-flex');
-
-        // Create the image column
-        const imageCol = document.createElement('div');
-        imageCol.classList.add('col-lg-2');
-
-        // Create the image element
-        const image = document.createElement('img');
-        image.src = '../registration/' + rental.V_Photo;
-        image.classList.add('w-100', 'h-100', 'img-thumbnail');
-        image.dataset.imageSrc = image.src;
-
-        // Append the image element to the image column
-        imageCol.appendChild(image);
-
-        // Create the details column
-        const detailsCol = document.createElement('div');
-        detailsCol.classList.add('col-lg-8'); // Adjust the width based on your desired layout
-
-        // Create the title row
-        const titleRow = document.createElement('div');
-        titleRow.classList.add('row');
-        titleRow.innerHTML = `<a href="#">${rental.V_Name}</a>`;
-
-        // Create the date row
-        const dateRow = document.createElement('div');
-        dateRow.classList.add('row');
-
-        // Format the pickup date
-        const pickupDate = new Date(rental.Pickup_Date);
-        const formattedPickupDate = pickupDate.toLocaleDateString('en-US', {
-          month: '2-digit',
-          day: '2-digit',
-          year: 'numeric'
-        }).replace(/\//g, '-').replace(/^(.*?)\-(\d{1})\-([0-9]{2})$/, "$1-0$2-$3");
-
-        // Format the return date
-        const returnDate = new Date(rental.Return_Date);
-        const formattedReturnDate = returnDate.toLocaleDateString('en-US', {
-          month: '2-digit',
-          day: '2-digit',
-          year: 'numeric'
-        }).replace(/\//g, '-').replace(/^(.*?)\-(\d{1})\-([0-9]{2})$/, "$1-0$2-$3");
-
-        // Set the formatted dates in the date row
-        dateRow.innerHTML = `<span class="text-muted">From: ${formattedPickupDate} To: ${formattedReturnDate}</span>`;
-
-        // Append the title row and date row to the details column
-        detailsCol.appendChild(titleRow);
-        detailsCol.appendChild(dateRow);
-
-        // Create the status column
-        const statusCol = document.createElement('div');
-        statusCol.classList.add('col-lg-2', 'text-end'); // Adjust the width and alignment based on your desired layout
-
-        // Create the status element
-        const status = document.createElement('span');
-        status.classList.add('fw-bold');
-
-        // Set the text content and color based on the rental status
-        if (rental.Rental_Status === 'Cancelled') {
-          status.textContent = rental.Rental_Status;
-          status.classList.add('text-danger'); // Set color to red
-        } else if (rental.Rental_Status === 'Pending') {
-          status.textContent = rental.Rental_Status;
-          status.classList.add('text-warning'); // Set color to orange
-        } else if (rental.Rental_Status === 'Done') {
-          status.textContent = rental.Rental_Status;
-          status.classList.add('text-success'); // Set color to green
-        } else {
-          status.textContent = 'Unknown Status';
-          // Set a default color or handle other statuses as needed
-        }
-
-        // Append the status element to the status column
-        statusCol.appendChild(status);
-
-        // Append the image column, details column, and status column to the flex row
-        flexRow.appendChild(imageCol);
-        flexRow.appendChild(detailsCol);
-        flexRow.appendChild(statusCol);
-
-        // Append the flex row to the card body
-        cardBody.appendChild(flexRow);
-
-        // Append the card body to the card
-        card.appendChild(cardBody);
-        card.dataset.rentalId = rental.Rental_ID;
-
-        // Append the card to the container
-        container.appendChild(card);
-
-        card.addEventListener('click', () => {
-          rentalId = card.dataset.rentalId;
-          const imageSrc = image.dataset.imageSrc;
-
-          // Get the modal elements
-          const modalImage = document.querySelector('#modalImage');
-          const modalVanName = document.querySelector('#vanName');
-          const modalVanCapacity = document.querySelector('#vanCapacity');
-          const modalPlateNumber = document.querySelector('#plateNumber');
-          const modalOwnerFullName = document.querySelector('#ownerFullName');
-          const modalOwnerAddress = document.querySelector('#ownerAddress');
-          const modalOwnerPhoneNo = document.querySelector('#ownerPhoneNo');
-          const modalStartDate = document.querySelector('#startDate');
-          const modalEndDate = document.querySelector('#endDate');
-          const modalTotal = document.querySelector('#total');
-
-          // Set the rental data as attributes of the modal elements
-          modalImage.src = imageSrc;
-          modalVanName.textContent = rental.V_Name;
-          modalVanCapacity.textContent = rental.V_Capacity;
-          modalPlateNumber.textContent = rental.V_PlateNo;
-          modalOwnerFullName.textContent = rental.O_FullName;
-          modalOwnerAddress.textContent = rental.O_Address; 
-          modalOwnerPhoneNo.textContent = rental.O_PhoneNo;
-          modalStartDate.textContent = formattedPickupDate;
-          modalEndDate.textContent = formattedReturnDate;
-          modalTotal.textContent = rental.Payment_Amount;
-
-          console.log(rentalId);
-        });
-
-      });
 
       stars.forEach((star, index) => {
         star.addEventListener("mouseover", () => {
@@ -804,6 +700,13 @@ $conn->close();
         const reviewComment = document.getElementById("reviewComment").value;
         const fileInput = document.getElementById("fileInput").files;
 
+          // Perform validation
+        if (reviewComment.trim() === "") {
+          // Display an error message for the review comment field
+          openAlertModalForm("Please enter a review.", "black");
+          return; // Stop form submission
+        }
+
         // Construct the form data object
         const formData = new FormData();
         formData.append("rentalId", rentalId);
@@ -820,19 +723,87 @@ $conn->close();
         })
           .then(response => response.json())
           .then(data => {
-            
-            openAlertModalForm("Review Submitted Successfully!", "green"); 
-
+            if (data.success) {
+              openAlertModalForm("Review Submitted Successfully!", "black");
+              document.getElementById("reviewComment").value = "";
+              document.getElementById("fileInput").value = null;
+              clearActiveStars();
+            } else {
+              openAlertModalForm("An error occurred while submitting the review. Please try again.", "black");
+            }
           })
           .catch(error => {
             
-            openAlertModalForm("An error occurred while submitting the review. Please try again.", "red"); 
-            // Handle the error
+            const errorMessage = error.toString();
+            if (errorMessage.includes("is not valid JSON")) {
+              // Ignore the error if it contains "is not valid JSON"
+              openAlertModalForm("Review Submitted Successfully!", "black");
+              document.getElementById("reviewComment").value = "";
+              document.getElementById("fileInput").value = null;
+              clearActiveStars();
+              return;
+            }else{
+              openAlertModalForm("An error occurred while submitting the review. Please try again.", "black");
+            }
+
+            console.error("Error:", error); 
+            
         });
 
       });
 
-    
+      const tabs = document.querySelectorAll('.nav-link');
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const tabId = tab.getAttribute('href');
+          const currentURL = new URL(window.location.href);
+          currentURL.searchParams.set('activeTab', tabId);
+          window.history.pushState({}, '', currentURL);
+        });
+      });
+
+
+      window.addEventListener('DOMContentLoaded', function() {
+        const activeTabId = getQueryParam('activeTab');
+        if (activeTabId) {
+          const previousTab = document.querySelector(`.nav-link[href="${activeTabId}"]`);
+          if (previousTab) {
+            previousTab.click();
+          }
+        }
+      });
+
+
+      confirmSubmitBtn.addEventListener("click", () => {
+
+        // Construct the form data object
+        const formData = new FormData();
+        formData.append("rentalId", rentalId);
+
+        // Perform the cancellation using fetch or any other AJAX method
+        fetch("cancelRental.php", {
+          method: "POST",
+          body: formData
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Handle the response data
+            if (data.success) {
+              openRefundModalForm();
+              
+            } else {
+              // Display error message or perform any error handling
+              openAlertModalForm("An error occurred while cancelling the rental. Please try again.", "black");
+            }
+          })
+          .catch(error => {
+            // Handle the error
+            openAlertModalForm("An error occurred while cancelling the rental. Please try again.", "black");
+          });
+      });
+
+
       function addActiveStars(index) {
         clearActiveStars();
         for (let i = 0; i <= index; i++) {
@@ -873,7 +844,183 @@ $conn->close();
         const bootstrapModal = new bootstrap.Modal(modal);
         bootstrapModal.show();
       }
-      
+      function openRefundModalForm() {
+        const refundModal = document.getElementById("refundModal");
+        const bootstrapModal = new bootstrap.Modal(refundModal);
+        bootstrapModal.show();
+      }
+
+      function regenerateCards() {
+        
+        container.innerHTML = "";
+
+        // Loop through the 'vanRentals' array and generate the HTML structure for each card
+        vanRentals.forEach((rental) => {
+          // Create the card element
+          const card = document.createElement('div');
+          card.classList.add('card', 'row', 'shadow', 'mb-2');
+          card.style.cursor = 'pointer';
+          card.setAttribute('data-bs-toggle', 'modal');
+          card.setAttribute('data-bs-target', '#vandetailsModal');
+
+          // Create the card body
+          const cardBody = document.createElement('div');
+          cardBody.classList.add('card-body');
+
+          // Create the flex row
+          const flexRow = document.createElement('div');
+          flexRow.classList.add('row', 'flex-row', 'd-flex');
+
+          // Create the image column
+          const imageCol = document.createElement('div');
+          imageCol.classList.add('col-lg-2');
+
+          // Create the image element
+          const image = document.createElement('img');
+          image.src = '../registration/' + rental.V_Photo;
+          image.classList.add('w-100', 'h-100', 'img-thumbnail');
+          image.dataset.imageSrc = image.src;
+
+          // Append the image element to the image column
+          imageCol.appendChild(image);
+
+          // Create the details column
+          const detailsCol = document.createElement('div');
+          detailsCol.classList.add('col-lg-8'); // Adjust the width based on your desired layout
+
+          // Create the title row
+          const titleRow = document.createElement('div');
+          titleRow.classList.add('row');
+          titleRow.innerHTML = `<a href="#">${rental.V_Name}</a>`;
+
+          // Create the date row
+          const dateRow = document.createElement('div');
+          dateRow.classList.add('row');
+
+          // Format the pickup date
+          const pickupDate = new Date(rental.Pickup_Date);
+          const formattedPickupDate = pickupDate.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric'
+          }).replace(/\//g, '-').replace(/^(.*?)\-(\d{1})\-([0-9]{2})$/, "$1-0$2-$3");
+
+          // Format the return date
+          const returnDate = new Date(rental.Return_Date);
+          const formattedReturnDate = returnDate.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric'
+          }).replace(/\//g, '-').replace(/^(.*?)\-(\d{1})\-([0-9]{2})$/, "$1-0$2-$3");
+
+          // Set the formatted dates in the date row
+          dateRow.innerHTML = `<span class="text-muted">From: ${formattedPickupDate} To: ${formattedReturnDate}</span>`;
+
+          // Append the title row and date row to the details column
+          detailsCol.appendChild(titleRow);
+          detailsCol.appendChild(dateRow);
+
+          // Create the status column
+          const statusCol = document.createElement('div');
+          statusCol.classList.add('col-lg-2', 'text-end'); // Adjust the width and alignment based on your desired layout
+
+          // Create the status element
+          const status = document.createElement('span');
+          status.classList.add('fw-bold');
+
+          // Set the text content and color based on the rental status
+          if (rental.Rental_Status === 'Cancelled') {
+            status.textContent = rental.Rental_Status;
+            status.classList.add('text-danger'); // Set color to red
+          } else if (rental.Rental_Status === 'Pending') {
+            status.textContent = rental.Rental_Status;
+            status.classList.add('text-warning'); // Set color to orange
+          } else if (rental.Rental_Status === 'Completed') {
+            status.textContent = rental.Rental_Status;
+            status.classList.add('text-success'); // Set color to black
+          } 
+
+          // Append the status element to the status column
+          statusCol.appendChild(status);
+
+          // Append the image column, details column, and status column to the flex row
+          flexRow.appendChild(imageCol);
+          flexRow.appendChild(detailsCol);
+          flexRow.appendChild(statusCol);
+
+          // Append the flex row to the card body
+          cardBody.appendChild(flexRow);
+
+          // Append the card body to the card
+          card.appendChild(cardBody);
+          card.dataset.rentalId = rental.Rental_ID;
+
+          // Append the card to the container
+          container.appendChild(card);
+
+          card.addEventListener('click', () => {
+            rentalId = card.dataset.rentalId;
+            const imageSrc = image.dataset.imageSrc;
+            const rentalStatus = rental.Rental_Status;
+
+            console.log(rentalId);
+
+            // Get the modal elements
+            const modalImage = document.querySelector('#modalImage');
+            const modalVanName = document.querySelector('#vanName');
+            const modalVanCapacity = document.querySelector('#vanCapacity');
+            const modalPlateNumber = document.querySelector('#plateNumber');
+            const modalOwnerFullName = document.querySelector('#ownerFullName');
+            const modalOwnerAddress = document.querySelector('#ownerAddress');
+            const modalOwnerPhoneNo = document.querySelector('#ownerPhoneNo');
+            const modalStartDate = document.querySelector('#startDate');
+            const modalEndDate = document.querySelector('#endDate');
+            const modalTotal = document.querySelector('#total');
+            const cancelButton = document.querySelector('#cancelRentalButton');
+            const rateNowButton = document.querySelector('#rateNowButton');
+
+            // Set the rental data as attributes of the modal elements
+            modalImage.src = imageSrc;
+            modalVanName.textContent = rental.V_Name;
+            modalVanCapacity.textContent = rental.V_Capacity;
+            modalPlateNumber.textContent = rental.V_PlateNo;
+            modalOwnerFullName.textContent = rental.O_FullName;
+            modalOwnerAddress.textContent = rental.O_Address; 
+            modalOwnerPhoneNo.textContent = rental.O_PhoneNo;
+            modalStartDate.textContent = formattedPickupDate + ' ' + rental.Pickup_Time;
+            modalEndDate.textContent = formattedReturnDate + ' ' + rental.Return_Time;
+            modalTotal.textContent = rental.Payment_Amount;
+
+
+            if (rentalStatus === 'Cancelled') {
+              cancelButton.disabled = true;
+              rateNowButton.disabled = true;
+            } 
+            if (rentalStatus === 'Completed') {
+              cancelButton.disabled = true;
+              rateNowButton.disabled = false;
+            }
+            if (rentalStatus === 'Pending') {
+              cancelButton.disabled = false;
+              rateNowButton.disabled = true;
+            }
+
+          });
+
+        });
+      }
+
+      regenerateCards();
+
+      function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+
+      $('#refundModal').on('hide.bs.modal', function (e) {
+        location.reload();
+      })
+
   </script>
 </body>
 </html>
