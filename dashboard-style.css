@@ -1,0 +1,162 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap");
+:root {
+    --light-color : #3db9f3;
+    --primary-color: #3685fb;
+    --primary-color-dark: #2f73d9;
+    --secondary-color: #fafcff;
+    --text-dark: #0d213f;
+    --text-dark-trans: #09172bcc;
+    --text-light: #767268;
+    --extra-light: #ffffff;
+    --max-width: 1200px;
+
+    --fc-small-font-size: .85em;
+    --fc-page-bg-color: #fff;
+    --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
+    --fc-neutral-text-color: #808080;
+    --fc-border-color: #ddd;
+
+    --fc-button-text-color: #fff;
+    --fc-button-bg-color: #2c67a1;
+    --fc-button-border-color: #2C3E50;
+    --fc-button-hover-bg-color: #1e2b37;
+    --fc-button-hover-border-color: #1a252f;
+    --fc-button-active-bg-color: #1a252f;
+    --fc-button-active-border-color: #151e27;
+
+    --fc-event-bg-color: #3788d8;
+    --fc-event-border-color: #3788d8;
+    --fc-event-text-color: #fff;
+    --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
+
+    --fc-more-link-bg-color: #d0d0d0;
+    --fc-more-link-text-color: inherit;
+
+    --fc-event-resizer-thickness: 8px;
+    --fc-event-resizer-dot-total-width: 8px;
+    --fc-event-resizer-dot-border-width: 1px;
+
+    --fc-non-business-color: rgba(215, 215, 215, 0.3);
+    --fc-bg-event-color: rgb(143, 223, 130);
+    --fc-bg-event-opacity: 0.3;
+    --fc-highlight-color: rgba(188, 232, 241, 0.3);
+    --fc-today-bg-color: rgba(255, 220, 40, 0.15);
+    --fc-now-indicator-color: red;
+  }
+* {
+	font-family: 'Poppins', sans-serif;
+}
+body {
+	background: #f1fbff;
+}
+
+.section-padding {
+	padding: 100px 0;
+}
+
+.profile-container {
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    height: 100px;
+    width: auto;
+  }
+  
+  .square-image {
+    width: 100px;
+  }
+/********************** FOOTER ***********************/
+.footer {
+  color:#fff;
+  padding:2rem;
+  flex-shrink: 0;
+}
+
+.footer__container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5rem;
+  color: var(--secondary-color);
+}
+
+
+.footer__col h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  padding-top: 2rem;
+}
+
+.footer__col h3 span {
+  color: var(--primary-color);
+}
+
+.footer__col p {
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.footer__col p:hover {
+  color: var(--primary-color);
+}
+
+.footer__col p span {
+  font-weight: 600;
+}
+
+.footer__col h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.footer__bar {
+  max-width: var(--max-width);
+  margin: auto;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  border-top: 1px solid var(--text-light);
+}
+
+/*********************USER-SIGNUP-FORM*********************/
+
+  .modal-lg .modal-dialog {
+    max-width: 1200px; /* Adjust the value as needed */
+  }
+
+/*********************Star Rating*******************/
+  .star-rating {
+    font-size: 24px;
+    color: #ffc107; /* Set the color for the filled stars */
+  }
+  
+  .star-rating .fa-star:hover {
+    color: #ffac33; /* Set the color for the stars on hover */
+  }
+  
+  .star-rating .fa-star.active {
+    color: #ffac33; /* Set the color for the selected stars */
+  }
+
+  .label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+/*********************MAKE-IT-RESPONSIVE*******************/
+
+
+@media (width < 600px) {
+
+  .footer__container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
