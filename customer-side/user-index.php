@@ -502,9 +502,9 @@ $conn->close();
       </div>
       <div class="modal-body">  
         <div id="vanInfo">
-          <img id="vanPhoto" src="" alt="Van Photo">
-          <p>Van: <span id="vanName"></span></p>
-          <p>Seater: <span id="vanCapacity"></span></p>
+          <img id="vanPhoto" src="" alt="Van Photo" class="w-100 rounded border shadow">
+          <h5 class="border-bottom pt-2"><span id="vanName"></span></h5>
+          <p>Capacity: <span id="vanCapacity"></span></p>
           <p>Plate Number: <span id="plateNumber"></span></p>
           <p>Owner's Full Name: <span id="ownerFullName"></span></p>
           <p>Owner's Address: <span id="ownerAddress"></span></p>
