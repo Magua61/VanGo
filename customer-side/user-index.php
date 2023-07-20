@@ -735,6 +735,8 @@ $conn->close();
                         // Add filled stars based on the rounded rating
                         ratingStars.innerHTML = "&#9733;".repeat(roundedRating);
                         ratingStars.style.color = "gold";
+                        ratingStars.style.fontSize = "20px";
+                        
 
                         // Add empty stars
                         ratingStars.innerHTML += "&#9734;".repeat(emptyStarsCount);
@@ -746,6 +748,7 @@ $conn->close();
 
                         var reviewDate = document.createElement("p");
                         reviewDate.innerHTML = (vanReview.Review_Datetime ? vanReview.Review_Datetime : "") + "<br>";
+                        reviewDate.classList.add("text-muted","pt-1");
                         reviewRatingDateContainer.appendChild(reviewDate);
 
                         listItem.appendChild(reviewRatingDateContainer);
@@ -775,7 +778,6 @@ $conn->close();
 
                       var ratingLabel = document.createElement("span");
                       ratingLabel.innerText = "Van Ratings: ";
-                      ratingLabel.style.fontWeight = "bold";
                       ratingLabel.style.fontSize = "22px";
                       overallRatingContainer.appendChild(ratingLabel);
 
@@ -803,8 +805,9 @@ $conn->close();
 
                       var reviewCountSpan = document.createElement("span");
                       reviewCountSpan.id = "total";
-                      reviewCountSpan.style.fontSize = "20px";
-                      reviewCountSpan.innerText = reviewCount + " reviews";
+                      reviewCountSpan.style.fontSize = "15px";
+                      reviewCountSpan.innerText = "("+ reviewCount + " reviews)";
+                      reviewCountSpan.classList.add("text-muted")
                       overallRatingContainer.appendChild(reviewCountSpan);
 
                       // Remove existing overall rating container, if any
