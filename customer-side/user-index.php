@@ -38,12 +38,14 @@ while ($row = $result->fetch_assoc()) {
     $vans[] = $row;
 }
 
-$query = "SELECT Van_ID, concat_ws(' ', C_FName, C_LName) as 'C_FullName', Review_Rating, Review_Comment, DATE_FORMAT(Review_Datetime, '%Y-%m-%d %H:%i') as 'Review_Datetime'
-        FROM customer C JOIN rental RL
-          ON C.Customer_ID = RL.Customer_ID
-        JOIN review RW
-          ON RL.Rental_ID = RW.Rental_ID
-        ORDER BY Review_Datetime DESC"; 
+$query = "SELECT Van_ID, Review_Photo, concat_ws(' ', C_FName, C_LName) as 'C_FullName', Review_Rating, Review_Comment, DATE_FORMAT(Review_Datetime, '%Y-%m-%d %H:%i') as 'Review_Datetime'
+          FROM customer C JOIN rental RL
+            ON C.Customer_ID = RL.Customer_ID
+          JOIN review RW
+            ON RL.Rental_ID = RW.Rental_ID
+          LEFT JOIN review_photo RP
+          ON RW.Review_ID = RP.Review_ID
+          ORDER BY Review_Datetime DESC"; 
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -751,6 +753,14 @@ $conn->close();
                         var reviewComment = document.createElement("p");
                         reviewComment.innerHTML = (vanReview.Review_Comment ? vanReview.Review_Comment : "") + "<br>";
                         listItem.appendChild(reviewComment);
+
+                        if (vanReview.Review_Photo) {
+                          var reviewPhoto = document.createElement("img");
+                          reviewPhoto.src = "../registration/uploads/reviews/" + vanReview.Review_Photo;
+                          reviewPhoto.style.width = "200px"; // Adjust the width as needed
+                          reviewPhoto.style.height = "auto"; // Adjust the height as needed
+                          listItem.appendChild(reviewPhoto);
+                        }
 
                         reviewsList.appendChild(listItem);
                       });
