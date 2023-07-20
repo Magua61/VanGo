@@ -326,7 +326,7 @@ $conn->close();
                     <div class="col-12 col-sm-auto mb-3">
                       <div class="mx-auto" style="width: 140px;">
                         <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
-                          <img src="<?php echo $customer['C_ProfilePic']; ?>" alt="Customer Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                          <img src="<?php echo $customer['C_ProfilePic']; ?>" id="profilePhotoContainer" alt="Customer Photo" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                       </div>
                     </div>
@@ -466,7 +466,7 @@ $conn->close();
                       </div>
                       <div class="row">
                         <div class="col d-flex justify-content-end">
-                          <button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
+                          <button class="btn btn-primary" name="submit" type="submit" >Save Changes</button>
                         </div>
                       </div>
                     </form>
@@ -531,6 +531,7 @@ $conn->close();
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
+                                        <div id="errorMessage" class="text-danger mt-2"></div>
                                         <h5>Quality of Service</h5>
                                         <div class="star-rating">
                                           <i class="far fa-star" data-value="1"></i>
@@ -544,14 +545,14 @@ $conn->close();
                                         </div>
                                         <div class=" form-outline d-flex">
                                             <i class="fa-solid fa-camera fa-lg pt-3 px-1"></i>
-                                            <input type="file" id="fileInput" name="fileInput" class="form-control custom-file-input "  multiple>
+                                            <input type="file" id="fileInput" name="fileInput" class="form-control custom-file-input " >
                                         </div>
                                     </div>
 
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="ratingSubmit" name="ratingSubmit">Confirm</button>
+                                  <button type="button" class="btn btn-primary" id="ratingSubmit" name="ratingSubmit">Confirm</button>
                                 </div>
                               </div>
                             </div>
@@ -678,6 +679,8 @@ $conn->close();
       var rentalId;
       var selectedStars;
       var container = document.querySelector('#cardContainer');
+      const profilePhotoContainer = document.getElementById("profilePhotoContainer");
+      const profilePhoto = document.getElementById("profilePhoto");
 
       stars.forEach((star, index) => {
         star.addEventListener("mouseover", () => {
@@ -700,11 +703,26 @@ $conn->close();
         const reviewComment = document.getElementById("reviewComment").value;
         const fileInput = document.getElementById("fileInput").files;
 
+        const errors = [];
+
           // Perform validation
         if (reviewComment.trim() === "") {
           // Display an error message for the review comment field
-          openAlertModalForm("Please enter a review.", "black");
-          return; // Stop form submission
+          errors.push('Please enter a review.');
+        }
+
+
+        if (errors.length > 0) {
+            const errorMessageList = document.createElement('ul');
+            errors.forEach((error) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = error;
+                errorMessageList.appendChild(listItem);
+            });
+
+            errorMessage.innerHTML = ''; // Clear any existing error message
+            errorMessage.appendChild(errorMessageList);
+            return;
         }
 
         // Construct the form data object
@@ -724,26 +742,36 @@ $conn->close();
           .then(response => response.json())
           .then(data => {
             if (data.success) {
+
+              hideRateVanModalForm();
               openAlertModalForm("Review Submitted Successfully!", "black");
               document.getElementById("reviewComment").value = "";
               document.getElementById("fileInput").value = null;
               clearActiveStars();
             } else {
+              hideRateVanModalForm();
               openAlertModalForm("An error occurred while submitting the review. Please try again.", "black");
             }
+          
+            
+
           })
           .catch(error => {
             
             const errorMessage = error.toString();
             if (errorMessage.includes("is not valid JSON")) {
               // Ignore the error if it contains "is not valid JSON"
+              hideRateVanModalForm();
               openAlertModalForm("Review Submitted Successfully!", "black");
               document.getElementById("reviewComment").value = "";
               document.getElementById("fileInput").value = null;
               clearActiveStars();
               return;
             }else{
-              openAlertModalForm("An error occurred while submitting the review. Please try again.", "black");
+              // After performing the desired action, you can hide the modal using JavaScript:
+              // const ratevanModal = new bootstrap.Modal(document.getElementById('ratevanModal'));
+              // ratevanModal.hide();
+
             }
 
             console.error("Error:", error); 
@@ -830,6 +858,24 @@ $conn->close();
         });
       }
 
+      function handleImagePreview(inputElement, imageElement) {
+        inputElement.addEventListener("change", function() {
+          const selectedImage = imageElement;
+
+          // Check if a file is selected
+          if (inputElement.files && inputElement.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+              selectedImage.src = e.target.result;
+              selectedImage.style.display = "block"; // Show the image once it's loaded
+            };
+
+            reader.readAsDataURL(inputElement.files[0]);
+          }
+        });
+      }
+
       function openAlertModalForm(textContent, color) {
         const modal = document.getElementById('alertModal');
         const alertContent = document.getElementById('alertContent');
@@ -848,6 +894,14 @@ $conn->close();
         const refundModal = document.getElementById("refundModal");
         const bootstrapModal = new bootstrap.Modal(refundModal);
         bootstrapModal.show();
+      }
+
+      function hideRateVanModalForm() {
+        const ratevanModal = document.getElementById("ratevanModal");
+        const bootstrapModal = bootstrap.Modal.getInstance(ratevanModal);
+        if (bootstrapModal) {
+          bootstrapModal.hide();
+        }
       }
 
       function regenerateCards() {
@@ -1010,6 +1064,7 @@ $conn->close();
         });
       }
 
+      handleImagePreview(profilePhoto, profilePhotoContainer);
       regenerateCards();
 
       function getQueryParam(name) {

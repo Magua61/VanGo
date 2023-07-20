@@ -336,19 +336,73 @@ $conn->close();
             </div>
         </div>
     </div>
+                    <!-- MODAL CONFIRM -->
+                     <div class="modal fade" id="confirmationModal" tabindex="-1">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Confirmation</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <p><span id="confirmContent">Are you sure you want to proceed with the payment?</span></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                                  <button type="button" class="btn btn-primary" id="confirmSubmit" name="confirmSubmit" data-bs-dismiss="modal" >Confirm</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        <!-- MODAL ALERT -->
+                        <div class="modal fade" id="alertModal" tabindex="-1">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Payment Successful! </h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <p> Thank you for your payment. Your transaction has been successfully processed. <span id="alertContent"></span></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
 
     <script type="text/javascript">
+
+        const makePaymentBtn = document.getElementById("make-payment-btn");
+
+        // Add the data-bs-target attribute to the element
+        makePaymentBtn.setAttribute("data-bs-toggle", "modal");
+        makePaymentBtn.setAttribute("data-bs-target", "#confirmationModal");
+
         // Event listener for the "Cancel Payment" button
         var cancelPaymentBtn = document.getElementById("cancel-payment-btn");
         cancelPaymentBtn.addEventListener("click", function() {
-            alert("Payment cancelled!");
+            
             window.location.href = "user-index.php";
         });
 
-        var makePaymentBtn = document.getElementById("make-payment-btn");
-        makePaymentBtn.addEventListener("click", function() {
+        var confirmSubmit = document.getElementById("confirmSubmit");
+        confirmSubmit.addEventListener("click", function() {
             var returnAddress = "<?php echo addslashes($returnAddress); ?>";
-            if (confirm("Are you sure you want to proceed?")) {
+
+            const confirmationModal = document.getElementById("confirmationModal");
+            const bootstrapModal = bootstrap.Modal.getInstance(confirmationModal);
+            if (bootstrapModal) {
+            bootstrapModal.hide();
+            }
+
+            const modal = document.getElementById('alertModal');
+            const newBootstrapModal = new bootstrap.Modal(modal);
+            newBootstrapModal.show();
+        
                 // AJAX request to insert rental and payment records
                 $.ajax({
                     url: "insertForTransaction.php", // Replace with the actual PHP file name
@@ -369,20 +423,23 @@ $conn->close();
                         // Handle the response from the PHP file
                         if (response.success) {
                             console.log("Records inserted successfully.");
-                            alert("Payment Successful! Thank you for your payment. Your transaction has been successfully processed.");
-                            window.location.href = "user-index.php";
+                        
+                            
                         } else {
                             console.log("Error inserting records.");
-                            alert("Payment Failed! Please try again later.");
+                           // alert("Payment Failed! Please try again later.");
                         }
                     },
                     error: function() {
                         console.log("AJAX request failed.");
-                        alert("Payment Failed! Please try again later.");
+                      //  alert("Payment Failed! Please try again later.");
                     }
                 });
-            }
+            
         });
+        $('#alertModal').on('hide.bs.modal', function (e) {
+            window.location.href = "user-index.php";
+         })
     </script>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
