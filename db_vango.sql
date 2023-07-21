@@ -36,7 +36,7 @@ CREATE TABLE `customer` (
   `C_PhoneNo` char(11) DEFAULT NULL,
   PRIMARY KEY (`Customer_ID`),
   UNIQUE KEY `C_Email_UNIQUE` (`C_Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,'Juan','Villaceran','Dela Cruz',NULL,'Palapala, San Ildefonso, Bulacan',NULL,'jdc@gmail.com','09795482641'),(2,'John','William','Smith',NULL,'123 Main Street',NULL,'johnsmith@example.com','09794522641'),(3,'Peter','Santos','Dela Cruz',NULL,'456 Sampaguita St., Makati City, Metro Manila, Philippines',NULL,'petdc@example.ph','09123456789'),(4,'James','Santos','Dela Cruz',NULL,'456 Sampaguita St., Makati City, Metro Manila, Philippines',NULL,'jamesdc@example.ph','09123456789'),(5,'Maria','Santos','Cruz',NULL,'789 Rizal Ave., Quezon City, Metro Manila, Philippines',NULL,'maria.cruz@example.ph','09123458733'),(6,'Carlos','Cruz','Gonzales',NULL,'789 Oak Street, Cebu City           ','1998-01-17','carlos.gonzales@example.com','09795488973'),(7,'Frank','Cruz','Dela Cruz','Male','422 Sampaguita St., Makati City, Metro Manila, Philippines','2015-01-17','frank.dc@example.ph','09789456444');
+INSERT INTO `customer` VALUES (1,'Juan','Villaceran','Dela Cruz',NULL,'Palapala, San Ildefonso, Bulacan',NULL,'jdc@gmail.com','09795482641'),(2,'John','William','Smith',NULL,'123 Main Street',NULL,'johnsmith@example.com','09794522641'),(3,'Peter','Santos','Dela Cruz',NULL,'456 Sampaguita St., Makati City, Metro Manila, Philippines',NULL,'petdc@example.ph','09123456789'),(4,'James','Santos','Dela Cruz',NULL,'456 Sampaguita St., Makati City, Metro Manila, Philippines',NULL,'jamesdc@example.ph','09123456789'),(5,'Maria','Santos','Cruz',NULL,'789 Rizal Ave., Quezon City, Metro Manila, Philippines',NULL,'maria.cruz@example.ph','09123458733'),(6,'Carlos','Cruz','Gonzales',NULL,'789 Oak Street, Cebu City            ','1998-01-17','carlos.gonzales@example.com','09795488973'),(7,'Frank','Cruz','Dela Cruz','Male','422 Sampaguita St., Makati City, Metro Manila, Philippines','2015-01-17','frank.dc@example.ph','09789456444'),(8,'Luis','Santos','Sanchez','Male','789 Rizal Ave., Quezon City, Metro Manila, Philippines','1985-09-21','luis.sanchez@example.com','09132245213'),(10,'Luka','Cruz','Dela Cruz','Male','389 Oak Street, Baguio City','1990-07-11','luka.cruz@example.com','09789456122');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -108,7 +108,7 @@ CREATE TABLE `customer_profile` (
 
 LOCK TABLES `customer_profile` WRITE;
 /*!40000 ALTER TABLE `customer_profile` DISABLE KEYS */;
-INSERT INTO `customer_profile` VALUES (6,'../registration/uploads/profiles/64b67a6c00271_1610243189305.jpg');
+INSERT INTO `customer_profile` VALUES (6,'64ba3d9b34a3d_693be7ecc80ccb76e68666c464fee042.jpg');
 /*!40000 ALTER TABLE `customer_profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +131,7 @@ CREATE TABLE `owner` (
   `O_PhoneNo` char(11) NOT NULL,
   PRIMARY KEY (`Owner_ID`),
   UNIQUE KEY `O_Email_UNIQUE` (`O_Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +140,7 @@ CREATE TABLE `owner` (
 
 LOCK TABLES `owner` WRITE;
 /*!40000 ALTER TABLE `owner` DISABLE KEYS */;
-INSERT INTO `owner` VALUES (1,'Antonio','Santos','Fernandez','Male','567 Cedar Street, Baguio City','1983-06-13','antonio.fernandez@example.com','09123456888'),(3,'Lucas','Gomez','Garcia','Male','543 Maple Street, Quezon City            ','1980-03-16','lucas.garcia@example.com','09998765432'),(6,'John','Cruz','Santos','Male','447 Cedar Street, Baguio City','1987-06-17','john.santos@example.ph','09789456333');
+INSERT INTO `owner` VALUES (1,'Antonio','Santos','Fernandez','Male','567 Cedar Street, Baguio City   ','1983-06-13','antonio.fernandez@example.com','09123456888'),(3,'Lucas','Gomez','Garcia','Male','543 Maple Street, Quezon City             ','1980-03-16','lucas.garcia@example.com','09998765432'),(6,'John','Cruz','Santos','Male','447 Cedar Street, Baguio City','1987-06-17','john.santos@example.ph','09789456333'),(9,'Luis','Santos','Santos','Male','447 Cedar Street, Baguio City ','1992-07-19','luis.santos@example.com','09789456444'),(11,'EQE','EQWEQ','EWEQE','Male','QWEQE','2023-07-27','dasda@gg.com','09324521345');
 /*!40000 ALTER TABLE `owner` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -206,7 +206,7 @@ CREATE TABLE `owner_profile` (
 
 LOCK TABLES `owner_profile` WRITE;
 /*!40000 ALTER TABLE `owner_profile` DISABLE KEYS */;
-INSERT INTO `owner_profile` VALUES (1,'uploads/profiles/64a2a607b618a_1_5059972890644971712.webp'),(3,'../registration/uploads/profiles/64b8ea872d597_1601172675683.jpg');
+INSERT INTO `owner_profile` VALUES (1,'64ba37e4f0797_0-2263_dark-anime-wallpaper-anime-wallpaper-dark.jpg'),(3,'64ba3b6f4bb0f_1601172675683.jpg'),(9,'64ba67e35b168_2_1017943490086044344.webp');
 /*!40000 ALTER TABLE `owner_profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -231,7 +231,7 @@ CREATE TABLE `owner_valid_id` (
 
 LOCK TABLES `owner_valid_id` WRITE;
 /*!40000 ALTER TABLE `owner_valid_id` DISABLE KEYS */;
-INSERT INTO `owner_valid_id` VALUES (1,'uploads/validids/64a2a607b6be6_Screenshot 2023-07-03 183148.png'),(3,'uploads/validids/64a75508052f0_Valid ID.png'),(6,'uploads/validids/64b46e3160c7e_Valid ID.png');
+INSERT INTO `owner_valid_id` VALUES (1,'uploads/validids/64a2a607b6be6_Screenshot 2023-07-03 183148.png'),(3,'uploads/validids/64a75508052f0_Valid ID.png'),(6,'uploads/validids/64b46e3160c7e_Valid ID.png'),(9,'64ba65b284ad4_00000IMG_00000_BURST20200209175020789_COVER.jpg');
 /*!40000 ALTER TABLE `owner_valid_id` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,7 +257,7 @@ CREATE TABLE `password` (
 
 LOCK TABLES `password` WRITE;
 /*!40000 ALTER TABLE `password` DISABLE KEYS */;
-INSERT INTO `password` VALUES ('antonio.fernandez@example.com','747838fd95b684fac806c20eea228bc81fd58e7e24c3ad70bfe4e42b766cadee','db993a7d7d67f73eadd30cee99c8ccc2'),('carlos.gonzales@example.com','1bb215a7de20813fc498986b97033faab09f8eaa14ec763b7d54dc6d39803d11','b8fc15a7ed3e7b85ec865988b9bdc5b7'),('frank.dc@example.ph','c99c7b4528917061a438b07d92a96d0cec953849779411cecfdcdb1e3c11698d','6c5c338a144f0d44b4f12f253c93a642'),('jamesdc@example.ph','dec213d9a2710457a4de6cf2507495b35c2ee022209aa3fce5bcf35ddbd49c5f','6388451f6ee781d40e458dd2d76e94b0'),('jdc@gmail.com','e7f9d80665c9a826a0b05da0f2070d32c7f1254b1745ef9ae19e68ff1d87f84e','a1b2c3d4e5f6g7h8'),('john.santos@example.ph','3f18bbe9c2bb7f1f2e792eb5dcb8e42eaa322e1b04eb2227af70afd062a35766','2c778e9868f84b43cb69036c67402b90'),('johnsmith@example.com','0a3c08075fadf8b36185ef55120422c26615a9ed1ec868a4c18557e601c1e7d6','0aa47b6117f286bb71dc1a0ec191ed53'),('lucas.garcia@example.com','dfe2d5c3ce5d02ade317dcbff20ed7c7724b27d1fbbc41b3b9d6168cfc56ab9a','6283eb1441e7133f364102e6919161f6'),('maria.cruz@example.ph','72ae9fc6eea47ff62027c89ede6a5f02c6b888397294e036e4b6c1c811704d80','68fa69badef4caba58fc798d586b3aaa'),('petdc@example.ph','8d6943814a0b0b49c1b25b9ae566bac4453d1eaf709d510f3d14e9b5aa0a8e47','a8c73c5459eb595c4ccea568d508ca41');
+INSERT INTO `password` VALUES ('antonio.fernandez@example.com','747838fd95b684fac806c20eea228bc81fd58e7e24c3ad70bfe4e42b766cadee','db993a7d7d67f73eadd30cee99c8ccc2'),('carlos.gonzales@example.com','1bb215a7de20813fc498986b97033faab09f8eaa14ec763b7d54dc6d39803d11','b8fc15a7ed3e7b85ec865988b9bdc5b7'),('dasda@gg.com','26f716b9c719de68e0e922ccaaa246d9cf1bb7c134f3e3099e75b308ddfe466e','b91f3876df5802dcc30c3324bc99f4f0'),('frank.dc@example.ph','c99c7b4528917061a438b07d92a96d0cec953849779411cecfdcdb1e3c11698d','6c5c338a144f0d44b4f12f253c93a642'),('jamesdc@example.ph','dec213d9a2710457a4de6cf2507495b35c2ee022209aa3fce5bcf35ddbd49c5f','6388451f6ee781d40e458dd2d76e94b0'),('jdc@gmail.com','e7f9d80665c9a826a0b05da0f2070d32c7f1254b1745ef9ae19e68ff1d87f84e','a1b2c3d4e5f6g7h8'),('john.santos@example.ph','3f18bbe9c2bb7f1f2e792eb5dcb8e42eaa322e1b04eb2227af70afd062a35766','2c778e9868f84b43cb69036c67402b90'),('johnsmith@example.com','0a3c08075fadf8b36185ef55120422c26615a9ed1ec868a4c18557e601c1e7d6','0aa47b6117f286bb71dc1a0ec191ed53'),('lucas.garcia@example.com','dfe2d5c3ce5d02ade317dcbff20ed7c7724b27d1fbbc41b3b9d6168cfc56ab9a','6283eb1441e7133f364102e6919161f6'),('luis.sanchez@example.com','9ef51bf1c22e6bf52593549461e90d30e17e2da18311f62a7cc56be4f64d2749','e49c7ff326d4779d85a84247807cf409'),('luis.santos@example.com','c79835578dd7a7a45eae85c1ff0f94e429712129d2b72a80a24b4472542f80a7','e288f7d3225af8701176e6af876b6c55'),('luka.cruz@example.com','ee72367955f46404b639cbbc6ab1d84f211353cbbcfef86cbfbdc99826dbc282','9868157aae1ef4dd4c2cdde28cd800e8'),('maria.cruz@example.ph','72ae9fc6eea47ff62027c89ede6a5f02c6b888397294e036e4b6c1c811704d80','68fa69badef4caba58fc798d586b3aaa'),('petdc@example.ph','8d6943814a0b0b49c1b25b9ae566bac4453d1eaf709d510f3d14e9b5aa0a8e47','a8c73c5459eb595c4ccea568d508ca41');
 /*!40000 ALTER TABLE `password` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -276,7 +276,7 @@ CREATE TABLE `payment` (
   PRIMARY KEY (`Payment_ID`),
   KEY `FK_Rental_ID_idx` (`Rental_ID`),
   CONSTRAINT `FK_Rental_ID` FOREIGN KEY (`Rental_ID`) REFERENCES `rental` (`Rental_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -285,7 +285,7 @@ CREATE TABLE `payment` (
 
 LOCK TABLES `payment` WRITE;
 /*!40000 ALTER TABLE `payment` DISABLE KEYS */;
-INSERT INTO `payment` VALUES (1,2,18000.00,'2023-07-10 10:59:17'),(4,5,18000.00,'2023-07-12 06:09:17'),(5,6,13500.00,'2023-07-17 06:55:31'),(6,7,12000.00,'2023-07-17 07:06:15'),(7,8,9000.00,'2023-07-19 14:47:51'),(8,9,25000.00,'2023-07-21 03:44:39'),(9,10,4500.00,'2023-07-21 04:18:31'),(10,11,4500.00,'2023-07-21 04:19:22'),(11,12,4500.00,'2023-07-21 04:19:59'),(12,13,5500.00,'2023-07-21 04:21:47'),(13,14,90000.00,'2023-07-21 04:30:13'),(14,15,90000.00,'2023-07-21 04:31:07'),(15,16,27500.00,'2023-07-21 04:38:34'),(16,17,16500.00,'2023-07-21 04:40:45');
+INSERT INTO `payment` VALUES (1,2,18000.00,'2023-07-10 10:59:17'),(4,5,18000.00,'2023-07-12 06:09:17'),(5,6,13500.00,'2023-07-17 06:55:31'),(6,7,12000.00,'2023-07-17 07:06:15'),(7,8,9000.00,'2023-07-19 14:47:51'),(17,18,11000.00,'2023-07-21 19:20:23'),(18,19,5000.00,'2023-07-21 19:22:20'),(19,20,13500.00,'2023-07-21 19:32:57');
 /*!40000 ALTER TABLE `payment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -362,7 +362,7 @@ CREATE TABLE `payment_history` (
   `Action` varchar(45) DEFAULT NULL,
   `Action_Datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`History_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -371,7 +371,7 @@ CREATE TABLE `payment_history` (
 
 LOCK TABLES `payment_history` WRITE;
 /*!40000 ALTER TABLE `payment_history` DISABLE KEYS */;
-INSERT INTO `payment_history` VALUES (1,7,8,9000.00,'2023-07-19 14:47:51','Insert','2023-07-19 14:47:51'),(2,8,9,25000.00,'2023-07-21 03:44:39','Insert','2023-07-21 03:44:39'),(3,9,10,4500.00,'2023-07-21 04:18:31','Insert','2023-07-21 04:18:31'),(4,10,11,4500.00,'2023-07-21 04:19:22','Insert','2023-07-21 04:19:22'),(5,11,12,4500.00,'2023-07-21 04:19:59','Insert','2023-07-21 04:19:59'),(6,12,13,5500.00,'2023-07-21 04:21:47','Insert','2023-07-21 04:21:47'),(7,13,14,90000.00,'2023-07-21 04:30:13','Insert','2023-07-21 04:30:13'),(8,14,15,90000.00,'2023-07-21 04:31:07','Insert','2023-07-21 04:31:07'),(9,15,16,27500.00,'2023-07-21 04:38:34','Insert','2023-07-21 04:38:34'),(10,16,17,16500.00,'2023-07-21 04:40:45','Insert','2023-07-21 04:40:45');
+INSERT INTO `payment_history` VALUES (1,7,8,9000.00,'2023-07-19 14:47:51','Insert','2023-07-19 14:47:51'),(2,8,9,25000.00,'2023-07-21 03:44:39','Insert','2023-07-21 03:44:39'),(3,9,10,4500.00,'2023-07-21 04:18:31','Insert','2023-07-21 04:18:31'),(4,10,11,4500.00,'2023-07-21 04:19:22','Insert','2023-07-21 04:19:22'),(5,11,12,4500.00,'2023-07-21 04:19:59','Insert','2023-07-21 04:19:59'),(6,12,13,5500.00,'2023-07-21 04:21:47','Insert','2023-07-21 04:21:47'),(7,13,14,90000.00,'2023-07-21 04:30:13','Insert','2023-07-21 04:30:13'),(8,14,15,90000.00,'2023-07-21 04:31:07','Insert','2023-07-21 04:31:07'),(9,15,16,27500.00,'2023-07-21 04:38:34','Insert','2023-07-21 04:38:34'),(10,16,17,16500.00,'2023-07-21 04:40:45','Insert','2023-07-21 04:40:45'),(11,17,18,11000.00,'2023-07-21 19:20:23','Insert','2023-07-21 19:20:23'),(12,18,19,5000.00,'2023-07-21 19:22:20','Insert','2023-07-21 19:22:20'),(13,19,20,13500.00,'2023-07-21 19:32:57','Insert','2023-07-21 19:32:57');
 /*!40000 ALTER TABLE `payment_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -398,7 +398,7 @@ CREATE TABLE `rental` (
   KEY `FKK_Customer_ID_idx` (`Customer_ID`),
   CONSTRAINT `FK_Rental_Customer_ID` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`Customer_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_Rental_Van_ID` FOREIGN KEY (`Van_ID`) REFERENCES `van` (`Van_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -407,7 +407,7 @@ CREATE TABLE `rental` (
 
 LOCK TABLES `rental` WRITE;
 /*!40000 ALTER TABLE `rental` DISABLE KEYS */;
-INSERT INTO `rental` VALUES (2,2,6,'Ilocos Norte','SM Manila','2023-07-12','10:00:00','2023-07-15','10:00:00','Cancelled'),(5,2,6,'Bagaiso','aaeqweqew','2023-07-17','10:00:00','2023-07-20','10:00:00','Completed'),(6,6,7,'Morong, Bataan','PUP Manila','2023-07-25','05:00:00','2023-07-28','05:00:00','Pending'),(7,2,7,'Batangas','PUP Manila','2023-07-25','08:00:00','2023-07-27','08:00:00','Pending'),(8,6,6,'Baler','PUP Sta. Mesa','2023-07-06','04:00:00','2023-07-08','04:00:00','Completed'),(9,2,6,'Lucban, Quezon','PUP Manila','2023-07-23','05:00:00','2023-07-28','05:00:00','Pending'),(10,1,6,'qweqe','eqweqw','2023-07-22','07:18:00','2023-07-23','07:18:00','Pending'),(11,1,6,'qweqe','eqweqw','2023-07-22','07:18:00','2023-07-23','07:18:00','Pending'),(12,1,6,'qweqe','eqweqw','2023-07-22','07:18:00','2023-07-23','07:18:00','Pending'),(13,1,6,'Tagaytay','PUP Sta. Mesa','2023-07-27','07:00:00','2023-07-28','07:00:00','Pending'),(14,2,6,'aweq','eweqw','2023-08-05','04:32:00','2023-08-23','04:32:00','Pending'),(15,2,6,'aweq','eweqw','2023-08-05','04:32:00','2023-08-23','04:32:00','Pending'),(16,1,6,'WEeqe','ewqweqeq','2023-10-17','06:38:00','2023-10-22','06:38:00','Pending'),(17,1,6,'Tagaytay','PUP Manila','2023-09-12','08:00:00','2023-09-15','08:00:00','Pending');
+INSERT INTO `rental` VALUES (2,2,6,'Ilocos Norte','SM Manila','2023-07-12','10:00:00','2023-07-15','10:00:00','Cancelled'),(5,2,6,'Bagaiso','aaeqweqew','2023-07-17','10:00:00','2023-07-20','10:00:00','Completed'),(6,6,7,'Morong, Bataan','PUP Manila','2023-07-25','05:00:00','2023-07-28','05:00:00','Pending'),(7,2,7,'Batangas','PUP Manila','2023-07-25','08:00:00','2023-07-27','08:00:00','Pending'),(8,6,6,'Baler','PUP Sta. Mesa','2023-07-06','04:00:00','2023-07-08','04:00:00','Completed'),(18,1,8,'Baguio','PUP Sta. Mesa','2023-07-06','21:19:00','2023-07-08','21:19:00','Cancelled'),(19,2,8,'Laguna','Luneta','2023-07-13','21:22:00','2023-07-14','21:22:00','Completed'),(20,1,8,'Bataan','Luneta','2023-06-26','13:32:00','2023-06-29','13:32:00','Completed');
 /*!40000 ALTER TABLE `rental` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -455,7 +455,7 @@ CREATE TABLE `rental_without_driver` (
 
 LOCK TABLES `rental_without_driver` WRITE;
 /*!40000 ALTER TABLE `rental_without_driver` DISABLE KEYS */;
-INSERT INTO `rental_without_driver` VALUES (6,'PUP Manila'),(8,'PUP Sta. Mesa'),(9,'PUP Manila'),(10,'qweqw'),(11,'qweqw'),(12,'qweqw'),(14,'qweqw'),(15,'qweqw');
+INSERT INTO `rental_without_driver` VALUES (6,'PUP Manila'),(8,'PUP Sta. Mesa'),(19,'Luneta'),(20,'Luneta');
 /*!40000 ALTER TABLE `rental_without_driver` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -534,7 +534,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('antonio.fernandez@example.com','owner','2023-06-18 01:32:02'),('carlos.gonzales@example.com','customer','2023-07-01 01:32:02'),('frank.dc@example.ph','customer',NULL),('jamesdc@example.ph','customer',NULL),('jdc@gmail.com','customer',NULL),('john.santos@example.ph','owner','2023-06-18 01:32:02'),('johnsmith@example.com','customer',NULL),('lucas.garcia@example.com','owner','2023-06-18 01:32:02'),('maria.cruz@example.ph','customer',NULL),('petdc@example.ph','customer',NULL);
+INSERT INTO `user` VALUES ('antonio.fernandez@example.com','owner','2023-06-18 01:32:02'),('carlos.gonzales@example.com','customer','2023-07-01 01:32:02'),('dasda@gg.com','owner','2023-07-21 23:44:54'),('frank.dc@example.ph','customer',NULL),('jamesdc@example.ph','customer',NULL),('jdc@gmail.com','customer',NULL),('john.santos@example.ph','owner','2023-06-18 01:32:02'),('johnsmith@example.com','customer',NULL),('lucas.garcia@example.com','owner','2023-06-18 01:32:02'),('luis.sanchez@example.com','customer','2023-07-21 18:50:34'),('luis.santos@example.com','owner','2023-07-21 19:01:22'),('luka.cruz@example.com','customer','2023-07-21 18:58:37'),('maria.cruz@example.ph','customer',NULL),('petdc@example.ph','customer',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -550,12 +550,12 @@ CREATE TABLE `van` (
   `V_PlateNo` varchar(7) NOT NULL,
   `V_Make` varchar(40) NOT NULL,
   `V_Model` varchar(50) NOT NULL,
-  `V_Year` year NOT NULL,
+  `V_Year` int NOT NULL,
   `V_Capacity` int NOT NULL,
   `Owner_ID` int DEFAULT NULL,
   PRIMARY KEY (`Van_ID`),
   KEY `FK_Van_idx` (`Owner_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -564,7 +564,7 @@ CREATE TABLE `van` (
 
 LOCK TABLES `van` WRITE;
 /*!40000 ALTER TABLE `van` DISABLE KEYS */;
-INSERT INTO `van` VALUES (1,'EG 7777','Toyota','Hiace',2019,16,1),(2,'GG 8231','Toyota','Hiace Super Grandia',2023,16,3),(6,'VB 4231','Nissan','NV350',2023,15,6);
+INSERT INTO `van` VALUES (1,'EG 7777','Toyota','Hiace',2019,16,1),(2,'GG 8231','Toyota','Hiace Super Grandia',2023,16,3),(6,'VB 4231','Nissan','NV350',2023,15,6),(9,'VB 4222','Nissan','NV350',2023,15,9);
 /*!40000 ALTER TABLE `van` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -590,7 +590,7 @@ CREATE TABLE `van_document` (
 
 LOCK TABLES `van_document` WRITE;
 /*!40000 ALTER TABLE `van_document` DISABLE KEYS */;
-INSERT INTO `van_document` VALUES (1,NULL,'uploads/certificates/64a2a607b7126_Screenshot 2023-07-03 183552.png'),(2,'uploads/receipts/OR.jpg','uploads/certificates/CR.jpg'),(6,'uploads/receipts/64b46e316167d_or.png','uploads/certificates/64b46e3161177_CR.png');
+INSERT INTO `van_document` VALUES (1,'64ba3814a85b0_OR.jpg','64ba386a5fa8e_CR.jpg'),(2,'64ba3bafdf56b_OR.jpg','64ba3bafde280_CR.jpg'),(6,'uploads/receipts/64b46e316167d_or.png','uploads/certificates/64b46e3161177_CR.png'),(9,'64ba65b2867bb_00000IMG_00000_BURST20200209175020789_COVER.jpg','64ba65b2859f0_00000IMG_00000_BURST20200209175020789_COVER.jpg');
 /*!40000 ALTER TABLE `van_document` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -615,7 +615,7 @@ CREATE TABLE `van_photo` (
 
 LOCK TABLES `van_photo` WRITE;
 /*!40000 ALTER TABLE `van_photo` DISABLE KEYS */;
-INSERT INTO `van_photo` VALUES (1,'uploads/van_photos/64a2a607b7f89_HIACE.jpg'),(2,'uploads/van_photos/64a755080687e_Toyota_Hiace_Super_Grandia.jpg'),(6,'uploads/van_photos/64b46e3162d0b_nissan.jpg');
+INSERT INTO `van_photo` VALUES (1,'64ba36c01001d_hiacee.jpg'),(2,'64ba3bafdd44f_64a7540de37aa_Toyota_Hiace_Super_Grandia.jpg'),(6,'64b46e3162d0b_nissan.jpg'),(9,'64ba65b2872a1_00000IMG_00000_BURST20200209175020789_COVER.jpg');
 /*!40000 ALTER TABLE `van_photo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -660,7 +660,7 @@ CREATE TABLE `van_unavailable_date` (
   PRIMARY KEY (`XDate_ID`),
   KEY `FK_Van_ID_idx` (`Van_ID`),
   CONSTRAINT `FK_Van_ID` FOREIGN KEY (`Van_ID`) REFERENCES `van` (`Van_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -669,7 +669,7 @@ CREATE TABLE `van_unavailable_date` (
 
 LOCK TABLES `van_unavailable_date` WRITE;
 /*!40000 ALTER TABLE `van_unavailable_date` DISABLE KEYS */;
-INSERT INTO `van_unavailable_date` VALUES (1,1,'2023-07-10','2023-07-14','Unavailable'),(2,1,'2023-07-18','2023-07-21','Unavailable'),(4,1,'2023-07-24','2023-07-26','Unavailable'),(11,2,'2023-07-17','2023-07-20','Booked'),(12,2,'2023-07-31','2023-08-02','Unavailable'),(13,6,'2023-07-25','2023-07-28','Booked'),(14,2,'2023-07-25','2023-07-27','Booked'),(15,6,'2023-07-06','2023-07-08','Booked'),(17,2,'2023-07-23','2023-07-28','Booked'),(18,1,'2023-07-22','2023-07-23','Booked'),(19,1,'2023-07-22','2023-07-23','Booked'),(20,1,'2023-07-22','2023-07-23','Booked'),(21,1,'2023-07-27','2023-07-28','Booked'),(22,2,'2023-08-05','2023-08-23','Booked'),(23,2,'2023-08-05','2023-08-23','Booked'),(24,1,'2023-10-17','2023-10-22','Booked'),(25,1,'2023-09-12','2023-09-15','Booked');
+INSERT INTO `van_unavailable_date` VALUES (1,1,'2023-07-10','2023-07-14','Unavailable'),(2,1,'2023-07-18','2023-07-21','Unavailable'),(4,1,'2023-07-24','2023-07-26','Unavailable'),(11,2,'2023-07-17','2023-07-20','Completed'),(12,2,'2023-07-31','2023-08-02','Unavailable'),(13,6,'2023-07-25','2023-07-28','Booked'),(14,2,'2023-07-25','2023-07-27','Booked'),(15,6,'2023-07-06','2023-07-08','Booked'),(24,1,'2023-10-17','2023-10-22','Booked'),(25,1,'2023-09-12','2023-09-15','Booked'),(28,9,'2023-07-11','2023-07-13','Unavailable'),(29,9,'2023-07-19','2023-07-21','Unavailable'),(31,2,'2023-07-13','2023-07-14','Completed'),(32,1,'2023-06-26','2023-06-29','Completed');
 /*!40000 ALTER TABLE `van_unavailable_date` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -723,7 +723,8 @@ BEGIN
     WHERE Van_ID = (SELECT Van_ID FROM van_unavailable_date where XDate_ID = inXDate_ID)
 		and Pickup_Date = (SELECT Start_Date FROM van_unavailable_date where XDate_ID = inXDate_ID)
         and Return_Date = (SELECT End_Date FROM van_unavailable_date where XDate_ID = inXDate_ID)
-		and Status = 'Booked';
+		and Rental_Status = 'Pending'
+	 LIMIT 1;
         
 	DELETE FROM van_unavailable_date WHERE XDate_ID = inXDate_ID;
 END ;;
@@ -742,4 +743,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-21  5:00:07
+-- Dump completed on 2023-07-22  0:06:06
