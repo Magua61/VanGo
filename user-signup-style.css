@@ -14,6 +14,7 @@
 	font-family: 'Poppins', sans-serif;
 }
 body {
+  font-family: 'Poppins', sans-serif;
 	background: #f1fbff;
 }
 
@@ -129,6 +130,10 @@ body {
 }
 
 /*********************USER-SIGNUP-FORM*********************/
+.card-icon{
+width: 150px;
+}
+
 @media (min-width: 1025px) {
     .h-custom {
     height: 100vh !important;
