@@ -242,6 +242,9 @@ $conn->close();
                                     <span>&nbsp &nbsp Total Amount:</span>
                                     <span>₱<?php echo $totalPrice; ?></span>
                                 </p>
+                                <br>
+                                    <span>Important Note: This booking includes a non-refundable fee of 500 pesos. In case of cancellation, this amount will not be refunded. 
+                                    </span>
                             </div>
 
                             </div>
@@ -284,6 +287,9 @@ $conn->close();
                                         <span>&nbsp &nbsp Total Amount:</span>
                                         <span>₱<?php echo $totalPrice; ?></span>
                                     </p>
+                                    <br>
+                                    <span>Important Note: This booking includes a non-refundable fee of 500 pesos. In case of cancellation, this amount will not be refunded. 
+                                    </span>
                                 </div>
                                 <div class="col-lg-7">
                                     <form action="" class="form">

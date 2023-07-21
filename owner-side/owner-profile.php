@@ -538,9 +538,7 @@ $conn->close();
                                         <div class="row w-100">
                                         <button class="btn btn-primary mb-2 mx-2 shadow"  data-bs-toggle="modal" data-bs-target="#updatevehicleModal">Update</button>
                                         </div>
-                                        <div class="row w-100">
-                                        <button class="btn btn-danger mb-2 mx-2 shadow">Disable</button>
-                                        </div>
+                                          
                                         <div class="row w-100">
                                         <button class="btn btn-light mb-2 mx-2 shadow" id="vanRatingsButton" data-bs-toggle="modal" data-bs-target="#vanratingsModal"><i class="fas fa-star text-warning"></i>Ratings</button>
                                         </div>
@@ -980,15 +978,19 @@ $conn->close();
       updateButton.addEventListener("click", function(event) {
 
          // Retrieve the form data
-        const vanPhoto = document.getElementById("vanPhotoEdit").files;
+        const vanPhoto = document.getElementById("vanPhotoEdit").files[0];
         const vanMake = document.getElementById('vanMakeUpdate').value;
         const vanModel = document.getElementById('vanModelUpdate').value;
         const vanYear = document.getElementById('vanYearUpdate').value;
         const vanCapacity = document.getElementById('vanCapacityUpdate').value;
         const plateNumber = document.getElementById('plateNumberUpdate').value;
         const vanRate = document.getElementById('vanRateUpdate').value;
-        const vanCR = document.getElementById("vanCREdit").files;
-        const vanOR = document.getElementById("vanOREdit").files;
+        const vanCR = document.getElementById("vanCREdit").files[0];
+        const vanOR = document.getElementById("vanOREdit").files[0];
+
+        console.log('vanPhoto');
+        console.log('vanOR');
+        console.log('vanCR');
 
         const errors = [];
 

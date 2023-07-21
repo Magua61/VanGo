@@ -245,7 +245,7 @@ $rentalDetailsJSON = json_encode($rentalDetailsArray);
             <div class="modal-content">
                 <form method="POST" action="deleteDate.php">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel">Remove Unavailable Dates?</h4>
+                        <h4 class="modal-title" id="myModalLabel">Remove this scheduled event?</h4>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
                     </div>
 
@@ -363,7 +363,7 @@ $rentalDetailsJSON = json_encode($rentalDetailsArray);
                         title: '<?php echo $row['Status']; ?>',
                         start: '<?php echo $row['Start_Date']; ?>',
                         end: moment('<?php echo $row['End_Date']; ?>').add(1, 'days').format('YYYY-MM-DD'),
-                        color: '<?php echo ($row['Status'] === 'Unavailable') ? 'red' : 'darkblue'; ?>',
+                        color: '<?php echo ($row['Status'] === 'Unavailable') ? 'red' : (($row['Status'] === 'Booked') ? 'orange' : 'darkblue'); ?>'
                     },
                     <?php endwhile; ?>
                 ]

@@ -1,3 +1,34 @@
+<?php
+
+require_once 'db_connect.php';
+
+$query = "SELECT V.Van_ID, V_Photo, concat_ws(' ', V_Make, V_Model, V_Capacity) as 'V_Name', V_Rate, COALESCE(FORMAT(AVG(Review_Rating), 1), 0.0) AS 'Average_Rating'
+			FROM van V LEFT JOIN van_photo VP
+				ON V.Van_ID = VP.Van_ID
+			LEFT JOIN van_rate VR 
+				ON V.Van_ID = VR.Van_ID
+			LEFT JOIN rental R
+				ON V.Van_ID = R.Van_ID
+			LEFT JOIN review RW
+				ON R.Rental_ID = RW.Rental_ID
+			GROUP BY V.Van_ID
+			ORDER BY Average_Rating DESC
+			LIMIT 3";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$result = $stmt->get_result();
+
+
+$vans = [];
+while ($row = $result->fetch_assoc()) {
+    $vans[] = $row;
+}
+
+
+$conn->close();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +41,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 	<link href="style.css" rel="stylesheet">
 </head>
-<body>
+<!-- <body>
     <!-- NAVIGATION BAR -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
 		<div class="container">
@@ -77,7 +108,7 @@
                             here in the Philippines. We provide cheap, fast, and reliable vans
                             as we support local van owners by giving them a platform to rent their vans!</a>
 					</div>
-                    <button class="btn action_btn">Rent a Van</button>
+                    <a href="signin/user-signin.php" class="btn btn-primary">Rent a Van</a>
 				</div>
 			</div>
 		</div>
@@ -125,46 +156,10 @@
             Explore your suitable and preferred type of van. Here you can
             find the right van for you.
           </p>
-          <div class="row">
-            <div class="col-12 col-md-12 col-lg-4">
-            <div class="trip__card ">
-              <img class="img-fluid" src="assets/van1.jpg" alt="trip" />
-              <div class="trip__details">
-                <p>Luxury 12 Seater Van</p>
-                <div class="rating"><i class="ri-star-fill"></i> 4.8</div>
-                <div class="booking__price">
-                  <div class="price"><span>From</span> P10,000</div>
-                  <button class="book__now">Book Now</button>
-                </div>
-              </div>
-            </div>
-            </div>
-            <div class="col-12 col-md-12 col-lg-4">
-            <div class="trip__card">
-              <img class="img-fluid" src="assets/van2.JPG" alt="trip" />
-              <div class="trip__details">
-                <p>14 Seater Van</p>
-                <div class="rating"><i class="ri-star-fill"></i> 4.5</div>
-                <div class="booking__price">
-                  <div class="price"><span>From</span> P6,000</div>
-                  <button class="book__now">Book Now</button>
-                </div>
-              </div>
-            </div>
-            </div>
-            <div class="col-12 col-md-12 col-lg-4">
-            <div class="trip__card">
-              <img class="img-fluid" src="assets/van3.JPG" alt="trip" />
-              <div class="trip__details">
-                <p>12 Seater Van</p>
-                <div class="rating"><i class="ri-star-fill"></i> 4.7</div>
-                <div class="booking__price">
-                  <div class="price"><span>From</span> P5,000</div>
-                  <button class="book__now">Book Now</button>
-                </div>
-              </div>
-            </div>
-            </div>
+          <div class="row" id="vanCardsContainer">
+            
+        
+           
           </div>
         </div>
       </section>
@@ -202,6 +197,88 @@
 	
 	<!-- JAVASCRIPT -->
 	<script src="https://kit.fontawesome.com/c08dde9054.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script>
+		
+		const vans = <?php echo json_encode($vans); ?>;
+
+		console.log(vans);
+
+		// Function to create a dynamic card based on the data
+		function createCard(vanData) {
+			const cardContainer = document.createElement("div");
+			cardContainer.classList.add("col-12", "col-md-12", "col-lg-4");
+
+			const card = document.createElement("div");
+			card.classList.add("trip__card");
+
+			const img = document.createElement("img");
+			img.classList.add("img-fluid");
+			img.src = 'registration/' + vanData.V_Photo;
+			img.alt = "trip";
+			img.style.width = "474px"; // Set the desired width here
+			img.style.height = "316px";
+
+			const tripDetails = document.createElement("div");
+			tripDetails.classList.add("trip__details");
+
+			const name = document.createElement("p");
+			name.textContent = vanData.V_Name + '-Seater';
+
+			const rating = document.createElement("div");
+			rating.classList.add("rating");
+
+			const starIcon = document.createElement("i");
+			starIcon.classList.add("fas", "fa-star"); // Use Font Awesome class for a solid star icon
+
+			rating.appendChild(starIcon); // Append the star icon to the rating element
+			rating.appendChild(document.createTextNode(` ${vanData.Average_Rating}`));
+
+			const bookingPrice = document.createElement("div");
+			bookingPrice.classList.add("booking__price");
+
+			const price = document.createElement("div");
+			price.classList.add("price");
+			price.innerHTML = `<span>From</span> ₱ ${vanData.V_Rate}`;
+
+			const bookNowBtn = document.createElement("button");
+			bookNowBtn.classList.add("book__now");
+			bookNowBtn.textContent = "Book Now";
+
+			bookNowBtn.addEventListener("click", function() {
+				window.location.href = "signin/user-signin.php";
+			});
+
+			bookingPrice.appendChild(price);
+			bookingPrice.appendChild(bookNowBtn);
+
+			tripDetails.appendChild(name);
+			tripDetails.appendChild(rating);
+			tripDetails.appendChild(bookingPrice);
+
+			card.appendChild(img);
+			card.appendChild(tripDetails);
+
+			cardContainer.appendChild(card);
+
+			return cardContainer;
+		}
+
+		// Function to add dynamic cards to the container
+		function addCardsToContainer(container, data) {
+			data.forEach((van) => {
+			const card = createCard(van);
+			container.appendChild(card);
+			});
+		}
+
+		// Get the container element
+		const container = document.getElementById("vanCardsContainer");
+
+		// Add dynamic cards to the container
+		addCardsToContainer(container, vans);
+	</script>
+
+</body> 
 </html>
