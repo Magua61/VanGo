@@ -17,9 +17,9 @@ $currentDate = date('Y-m-d');
 $currentTime = date('H:i:s');
 
 $sql = "SELECT Rental_ID, Van_ID, Pickup_Date, Return_Date  
-        FROM rental WHERE Return_Date <= ? AND Return_Time <= ? AND Rental_Status = 'Pending'";
+        FROM rental WHERE Return_Date <= ? AND Rental_Status = 'Pending'";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ss", $currentDate, $currentTime);
+$stmt->bind_param("s", $currentDate);
 $stmt->execute();
 
 $result = $stmt->get_result();

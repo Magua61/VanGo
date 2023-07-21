@@ -25,7 +25,7 @@ while ($row = $result->fetch_assoc()) {
 $query = "SELECT V.Van_ID, V_Photo, concat_ws(' ', V_Make, V_Model) as 'V_Name', V_Year, V_Capacity, concat_ws(' ', O_FName, O_LName) as 'O_FullName', O_Address, O_PhoneNo, V_Rate, V_PlateNo
           FROM owner O JOIN van V ON
             O.Owner_ID = V.Owner_ID
-          LEFT JOIN van_rate VR ON
+          JOIN van_rate VR ON
             V.Van_ID = VR.Van_ID
           LEFT JOIN van_photo VP ON
             V.Van_ID = VP.Van_ID";
@@ -475,11 +475,11 @@ $conn->close();
             </p>
           </div>
           <div class="footer__col">
-            <h4>Support</h4>
-            <p>FAQs</p>
-            <p>Terms & Conditions</p>
-            <p>Privacy Policy</p>
-            <p>Contact Us</p>
+          <h4>Support</h4>
+            <p class="faq-link">FAQs</p>
+            <p class="terms-link" >Terms & Conditions</p>
+            <p class="privacy-link" >Privacy Policy</p>
+            <p class="contact-link">Contact Us</p>
           </div>
           <div class="footer__col">
             <h4>Address</h4>
@@ -601,6 +601,7 @@ $conn->close();
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../script.js"></script>
 
   <script>
       var vans = <?php echo json_encode($vans); ?>;
