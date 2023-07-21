@@ -118,14 +118,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     if(is_null($owner['O_ProfilePic'])){
         $query = "INSERT INTO owner_profile(Owner_ID, O_ProfilePic) VALUES (?,?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("is", $_SESSION['ownerid'], $profilePhotoPath);
+        $stmt->bind_param("is", $_SESSION['ownerid'], $profilePhotoUpload['fileName']);
         $stmt->execute();
 
     }
     if(!empty($_FILES['profilePhoto']['name'])){
         $query = "UPDATE owner_profile SET O_ProfilePic=? WHERE Owner_ID=?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("si", $profilePhotoPath, $_SESSION['ownerid']);
+        $stmt->bind_param("si", $profilePhotoUpload['fileName'], $_SESSION['ownerid']);
         $stmt->execute();
     }
     if(    
@@ -343,7 +343,7 @@ $conn->close();
                     <div class="col-12 col-sm-auto mb-3">
                       <div class="mx-auto" style="width: 140px;">
                         <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
-                          <img src="<?php echo $owner['O_ProfilePic']; ?>" id="profilePhotoContainer" alt="Owner Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                          <img src="<?php echo '../registration/uploads/profiles/'.$owner['O_ProfilePic']; ?>" id="profilePhotoContainer" alt="Owner Photo" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                       </div>
                     </div>
@@ -753,7 +753,7 @@ $conn->close();
 
           // Create the image element
           const image = document.createElement('img');
-          image.src = '../registration/' + van.V_Photo;
+          image.src = '../registration/uploads/van_photos/' + van.V_Photo;
           image.classList.add('w-100', 'h-100', 'img-thumbnail');
           image.dataset.imageSrc = image.src;
 
@@ -834,8 +834,8 @@ $conn->close();
             modalVanCapacity.textContent = van.V_Capacity;
             modalPlateNumber.textContent = van.V_PlateNo;
             modalVanRate.textContent = van.V_Rate;
-            modalVanCR.src = '../registration/' + van.V_CR; 
-            modalVanOR.src = '../registration/' + van.V_OR;
+            modalVanCR.src = '../registration/uploads/certificates/' + van.V_CR; 
+            modalVanOR.src = '../registration/uploads/receipts/' + van.V_OR;
 
             modalImageUpdate.src = imageSrc;
             modalVanNameUpdate.textContent = van.V_Name;
@@ -845,22 +845,22 @@ $conn->close();
             modalVanCapacityUpdate.value = van.V_Capacity;
             modalPlateNumberUpdate.value = van.V_PlateNo;
             modalVanRateUpdate.value = van.V_Rate;
-            modalVanCRUpdate.src = '../registration/' + van.V_CR; 
-            modalVanORUpdate.src = '../registration/' + van.V_OR;
+            modalVanCRUpdate.src = '../registration/uploads/certificates/' + van.V_CR; 
+            modalVanORUpdate.src = '../registration/uploads/receipts/' + van.V_OR;
 
             modalVanCR.addEventListener('click', () => {
-              changeFullSizeImage('../registration/' + van.V_CR, 'Certificate of Registration');
+              changeFullSizeImage('../registration/uploads/certificates/' + van.V_CR, 'Certificate of Registration');
             });
 
             modalVanOR.addEventListener('click', () => {
-              changeFullSizeImage('../registration/' + van.V_OR, 'Official Receipt of Registration');
+              changeFullSizeImage('../registration/uploads/receipts/' + van.V_OR, 'Official Receipt of Registration');
             });
             modalVanCRUpdate.addEventListener('click', () => {
-              changeFullSizeImage('../registration/' + van.V_CR, 'Certificate of Registration');
+              changeFullSizeImage('../registration/uploads/certificates/' + van.V_CR, 'Certificate of Registration');
             });
 
             modalVanORUpdate.addEventListener('click', () => {
-              changeFullSizeImage('../registration/' + van.V_OR, 'Official Receipt of Registration');
+              changeFullSizeImage('../registration/uploads/receipts/' + van.V_OR, 'Official Receipt of Registration');
             });
 
           });
@@ -988,9 +988,9 @@ $conn->close();
         const vanCR = document.getElementById("vanCREdit").files[0];
         const vanOR = document.getElementById("vanOREdit").files[0];
 
-        console.log('vanPhoto');
-        console.log('vanOR');
-        console.log('vanCR');
+        console.log('vanPhoto', vanPhoto);
+        console.log('vanOR', vanPhoto);
+        console.log('vanCR', vanPhoto);
 
         const errors = [];
 

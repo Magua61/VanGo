@@ -317,7 +317,7 @@ $rentalDetailsJSON = json_encode($rentalDetailsArray);
 
                                 if (matchedRental) {
                                     // Access rental details properties
-                                    var customerPicture = matchedRental.C_ProfilePic;
+                                    var customerPicture = '../registration/uploads/profiles/' + matchedRental.C_ProfilePic;
                                     var customerEmail = matchedRental.C_Email;
                                     var customerPhone = matchedRental.C_PhoneNo;
                                     var rentalID = matchedRental.Rental_ID;

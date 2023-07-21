@@ -104,14 +104,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     if(is_null($customer['C_ProfilePic'])){
         $query = "INSERT INTO customer_profile(Customer_ID, C_ProfilePic) VALUES (?,?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("is", $_SESSION['customerid'], $profilePhotoPath);
+        $stmt->bind_param("is", $_SESSION['customerid'], $profilePhotoUpload['fileName']);
         $stmt->execute();
 
     }
     if(!empty($_FILES['profilePhoto']['name'])){
         $query = "UPDATE customer_profile SET C_ProfilePic=? WHERE Customer_ID=?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("si", $profilePhotoPath, $_SESSION['customerid']);
+        $stmt->bind_param("si", $profilePhotoUpload['fileName'], $_SESSION['customerid']);
         $stmt->execute();
     }
     if(    
@@ -326,7 +326,7 @@ $conn->close();
                     <div class="col-12 col-sm-auto mb-3">
                       <div class="mx-auto" style="width: 140px;">
                         <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
-                          <img src="<?php echo $customer['C_ProfilePic']; ?>" id="profilePhotoContainer" alt="Customer Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                          <img src="<?php echo '../registration/uploads/profiles/'.$customer['C_ProfilePic']; ?>" id="profilePhotoContainer" alt="Customer Photo" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                       </div>
                     </div>
@@ -931,7 +931,7 @@ $conn->close();
 
           // Create the image element
           const image = document.createElement('img');
-          image.src = '../registration/' + rental.V_Photo;
+          image.src = '../registration/uploads/van_photos/' + rental.V_Photo;
           image.classList.add('w-100', 'h-100', 'img-thumbnail');
           image.dataset.imageSrc = image.src;
 

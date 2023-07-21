@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $query = "INSERT INTO owner_valid_id (Owner_ID, O_ValidID) VALUES (?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("is", $owner['Owner_ID'], $validIDPath);
+        $stmt->bind_param("is", $owner['Owner_ID'], $validIDUpload['fileName']);
         $stmt->execute();
 
         // Insert the van data into the van table
@@ -82,12 +82,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $query = "INSERT INTO van_document (Van_ID, V_OR, V_CR) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("iss", $vanID, $orPath, $crPath);
+        $stmt->bind_param("iss", $vanID, $orUpload['fileName'], $crUpload['fileName']);
         $stmt->execute();
 
         $query = "INSERT INTO van_photo (Van_ID, V_Photo) VALUES (?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("is", $vanID, $vanPhotoPath);
+        $stmt->bind_param("is", $vanID, $vanPhotoUpload['fileName']);
         $stmt->execute();
 
         // Redirect to success page
@@ -342,5 +342,8 @@ function uploadFile($fileField, $destinationFolder)
     <!-- JAVASCRIPT -->
 	<script src="https://kit.fontawesome.com/c08dde9054.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>                                                                                                                            
+    </script>
+
   </body>
 </html>

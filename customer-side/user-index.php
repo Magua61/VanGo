@@ -642,7 +642,7 @@ $conn->close();
 
                   var image = document.createElement("img");
                   if (van.hasOwnProperty("V_Photo")) {
-                      image.setAttribute("src", "../registration/" + van.V_Photo);
+                      image.setAttribute("src", "../registration/uploads/van_photos/" + van.V_Photo);
                   }
                   image.classList.add("card-img-top","w-100","h-50");
                   innerCard.appendChild(image);
@@ -695,7 +695,7 @@ $conn->close();
                       vanId = getVanIdByName(vanName);
                       var matchingReviews = getVanReviews(vanId);
 
-                      document.getElementById("vanPhoto").setAttribute("src", "../registration/" + van.V_Photo);
+                      document.getElementById("vanPhoto").setAttribute("src", "../registration/uploads/van_photos/" + van.V_Photo);
                       document.getElementById("vanName").innerText = van.V_Name ? van.V_Name.toUpperCase() + " " + (van.V_Year ? van.V_Year : "") : "";
                       document.getElementById("vanCapacity").innerText = van.V_Capacity ? van.V_Capacity : "";
                       document.getElementById("plateNumber").innerText = van.V_PlateNo ? van.V_PlateNo : "";

@@ -33,27 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vanORPath = $destinationFolder . $vanORUpload['fileName'];
     
 
-    // // Process the form data as needed, for example, save the files and other data to a database
-    // $targetDir = "uploads/";
-    // $vanPhotoFileName = basename($vanPhoto['name']);
-    // $vanCRFileName = basename($vanCR['name']);
-    // $vanORFileName = basename($vanOR['name']);
-
-    // $vanPhotoPath = $targetDir . 'van_photos/' . $vanPhotoFileName;
-    // $vanCRPath = $targetDir . 'certificates/' . $vanCRFileName;
-    // $vanORPath = $targetDir . 'receipts/' . $vanORFileName;
-
-    //   // Move uploaded files to the target directories
-    // if ($vanPhoto['error'] === 0) {
-    //     move_uploaded_file($vanPhoto['tmp_name'], $vanPhotoPath);
-    // }
-    // if ($vanCR['error'] === 0) {
-    //     move_uploaded_file($vanCR['tmp_name'], $vanCRPath);
-    // }
-    // if ($vanOR['error'] === 0) {
-    //     move_uploaded_file($vanOR['tmp_name'], $vanORPath);
-    // }
-
     $query = "UPDATE van SET 
             V_PlateNo = ?, 
             V_Make = ?, 
@@ -70,22 +49,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("di", $vanRate, $vanId);
     $stmt->execute();
 
-    if ($vanPhoto['error'] === 0) {
+    if (!empty($_FILES['vanPhoto']['name'])) {
         $query = "UPDATE van_photo SET V_Photo = ? WHERE Van_ID = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("si", $vanPhotoPath, $vanId);
+        $stmt->bind_param("si", $vanPhotoUpload['fileName'], $vanId);
         $stmt->execute();
     }
-    if ($vanCR['error'] === 0) {
+    if (!empty($_FILES['vanCR']['name'])) {
         $query = "UPDATE van_document SET V_CR = ? WHERE Van_ID = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("si", $vanCRPath, $vanId);
+        $stmt->bind_param("si", $vanCRUpload['fileName'], $vanId);
         $stmt->execute();
     }
-    if ($vanOR['error'] === 0) {
+    if (!empty($_FILES['vanOR']['name'])) {
         $query = "UPDATE van_document SET V_OR = ? WHERE Van_ID = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("si", $vanORPath, $vanId);
+        $stmt->bind_param("si", $vanORUpload['fileName'], $vanId);
         $stmt->execute();
     }
 

@@ -215,7 +215,7 @@ $conn->close();
 
 			const img = document.createElement("img");
 			img.classList.add("img-fluid");
-			img.src = 'registration/' + vanData.V_Photo;
+			img.src = 'registration/uploads/van_photos/' + vanData.V_Photo;
 			img.alt = "trip";
 			img.style.width = "474px"; // Set the desired width here
 			img.style.height = "316px";
