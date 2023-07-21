@@ -131,7 +131,7 @@ $conn->close();
 							<i class="fa-solid fa-van-shuttle"></i>
 							<h3 class="card-title">Rent a Van</h3>
 							<p class="lead">With our wide selection of vans for rent, you can choose which suits you best.</p>
-                            <button class="book__now">Read More</button>
+                            
 						</div>
 					</div>
 				</div>
@@ -141,7 +141,7 @@ $conn->close();
 							<i class="fa-regular fa-handshake"></i>
 							<h3 class="card-title">Become our Partner</h3>
 							<p class="lead">We support our local van operators by providing a platform to rent their van!</p>
-                            <button class="book__now">Read More</button>
+                             
 						</div>
 					</div>
 				</div>
