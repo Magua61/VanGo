@@ -137,6 +137,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
       $email !== $owner['O_Email'] ||
       $phone !== $owner['O_PhoneNo']
     ){
+        if($email !== $owner['O_Email']){
+        $query = "UPDATE user SET User_Email = ? WHERE User_Email = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ss", $email, $owner['O_Email']);
+        $stmt->execute();
+        }
+        
         $query = "UPDATE owner SET O_FName=?, O_MName=?, O_LName=?, O_Address=?, 
                   O_Birthdate=?, O_Email=?, O_PhoneNo=? WHERE Owner_ID=?";
         $stmt = $conn->prepare($query);
@@ -241,7 +248,7 @@ $conn->close();
   <script src="https://kit.fontawesome.com/c08dde9054.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
   <!--Main Navigation-->

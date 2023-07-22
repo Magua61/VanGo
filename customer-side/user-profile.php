@@ -123,6 +123,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
       $email !== $customer['C_Email'] ||
       $phone !== $customer['C_PhoneNo']
     ){
+      if($email !== $customer['C_Email']){
+        $query = "UPDATE user SET User_Email = ? WHERE User_Email = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ss", $email, $customer['C_Email']);
+        $stmt->execute();
+        }
+
         $query = "UPDATE customer SET C_FName=?, C_MName=?, C_LName=?, C_Address=?, 
                   C_Birthdate=?, C_Email=?, C_PhoneNo=? WHERE Customer_ID=?";
         $stmt = $conn->prepare($query);
@@ -1033,7 +1040,7 @@ $conn->close();
                         <!-- CONTACT US -->
 	
 	<!-- JAVASCRIPT -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   
   <script src="../script.js"></script>
 

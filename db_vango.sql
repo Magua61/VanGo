@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `db_vango` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `db_vango`;
 -- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
 -- Host: localhost    Database: db_vango
@@ -36,7 +34,7 @@ CREATE TABLE `customer` (
   `C_PhoneNo` char(11) DEFAULT NULL,
   PRIMARY KEY (`Customer_ID`),
   UNIQUE KEY `C_Email_UNIQUE` (`C_Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,11 +51,11 @@ UNLOCK TABLES;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `customer_AFTER_UPDATE` AFTER UPDATE ON `customer` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `customer_AFTER_UPDATE` AFTER UPDATE ON `customer` FOR EACH ROW BEGIN
 	IF NEW.C_Email <> OLD.C_Email THEN
         UPDATE user
         SET User_Email = NEW.C_Email
@@ -74,11 +72,11 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `customer_AFTER_DELETE` AFTER DELETE ON `customer` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `customer_AFTER_DELETE` AFTER DELETE ON `customer` FOR EACH ROW BEGIN
 	DELETE FROM user WHERE User_Email = OLD.C_Email;
 END */;;
 DELIMITER ;
@@ -99,7 +97,7 @@ CREATE TABLE `customer_profile` (
   `C_ProfilePic` varchar(2048) DEFAULT NULL,
   KEY `FK_C_ProfilePic_idx` (`Customer_ID`),
   CONSTRAINT `FK_C_ProfilePic` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`Customer_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +129,7 @@ CREATE TABLE `owner` (
   `O_PhoneNo` char(11) NOT NULL,
   PRIMARY KEY (`Owner_ID`),
   UNIQUE KEY `O_Email_UNIQUE` (`O_Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,11 +146,11 @@ UNLOCK TABLES;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `owner_AFTER_UPDATE` AFTER UPDATE ON `owner` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `owner_AFTER_UPDATE` AFTER UPDATE ON `owner` FOR EACH ROW BEGIN
     IF NEW.O_Email <> OLD.O_Email THEN
         UPDATE user
         SET User_Email = NEW.O_Email
@@ -169,11 +167,11 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `owner_AFTER_DELETE` AFTER DELETE ON `owner` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `owner_AFTER_DELETE` AFTER DELETE ON `owner` FOR EACH ROW BEGIN
 	DELETE FROM van WHERE Owner_ID = OLD.Owner_ID;
     
     DELETE FROM user WHERE User_Email = OLD.O_Email;
@@ -197,7 +195,7 @@ CREATE TABLE `owner_profile` (
   `O_ProfilePic` varchar(2048) DEFAULT NULL,
   KEY `FK_O_ProfilePic_idx` (`Owner_ID`),
   CONSTRAINT `FK_O_ProfilePic` FOREIGN KEY (`Owner_ID`) REFERENCES `owner` (`Owner_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -222,7 +220,7 @@ CREATE TABLE `owner_valid_id` (
   `O_ValidID` varchar(2048) DEFAULT NULL,
   KEY `FK_O_ValidID_idx` (`Owner_ID`),
   CONSTRAINT `FK_O_ValidID` FOREIGN KEY (`Owner_ID`) REFERENCES `owner` (`Owner_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,7 +246,7 @@ CREATE TABLE `password` (
   `Salt_Password` varchar(1000) DEFAULT NULL,
   UNIQUE KEY `C_Email_UNIQUE` (`User_Email`),
   CONSTRAINT `FK_Password` FOREIGN KEY (`User_Email`) REFERENCES `user` (`User_Email`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -276,7 +274,7 @@ CREATE TABLE `payment` (
   PRIMARY KEY (`Payment_ID`),
   KEY `FK_Rental_ID_idx` (`Rental_ID`),
   CONSTRAINT `FK_Rental_ID` FOREIGN KEY (`Rental_ID`) REFERENCES `rental` (`Rental_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -285,7 +283,7 @@ CREATE TABLE `payment` (
 
 LOCK TABLES `payment` WRITE;
 /*!40000 ALTER TABLE `payment` DISABLE KEYS */;
-INSERT INTO `payment` VALUES (1,2,18000.00,'2023-07-10 10:59:17'),(4,5,18000.00,'2023-07-12 06:09:17'),(5,6,13500.00,'2023-07-17 06:55:31'),(6,7,12000.00,'2023-07-17 07:06:15'),(7,8,9000.00,'2023-07-19 14:47:51'),(17,18,11000.00,'2023-07-21 19:20:23'),(18,19,5000.00,'2023-07-21 19:22:20'),(19,20,13500.00,'2023-07-21 19:32:57');
+INSERT INTO `payment` VALUES (1,2,18000.00,'2023-07-10 10:59:17'),(4,5,18000.00,'2023-07-12 06:09:17'),(5,6,13500.00,'2023-07-17 06:55:31'),(6,7,12000.00,'2023-07-17 07:06:15'),(7,8,9000.00,'2023-07-19 14:47:51'),(17,18,11000.00,'2023-07-21 19:20:23'),(18,19,5000.00,'2023-07-21 19:22:20'),(19,20,13500.00,'2023-07-21 19:32:57'),(20,21,13500.00,'2023-07-22 06:11:23'),(21,22,15000.00,'2023-07-22 06:24:43'),(22,23,10000.00,'2023-07-22 06:26:51');
 /*!40000 ALTER TABLE `payment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -293,11 +291,11 @@ UNLOCK TABLES;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `payment_AFTER_INSERT` AFTER INSERT ON `payment` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `payment_AFTER_INSERT` AFTER INSERT ON `payment` FOR EACH ROW BEGIN
     INSERT INTO payment_history (Payment_ID, Rental_ID, Payment_Amount, Payment_Date_Time, Action, Action_Datetime)
     VALUES (NEW.Payment_ID, NEW.Rental_ID, NEW.Payment_Amount, NEW.Payment_Date_Time, 'Insert', NOW());
 END */;;
@@ -311,11 +309,11 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `payment_AFTER_UPDATE` AFTER UPDATE ON `payment` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `payment_AFTER_UPDATE` AFTER UPDATE ON `payment` FOR EACH ROW BEGIN
 	INSERT INTO payment_history (Payment_ID, Rental_ID, Payment_Amount, Payment_Date_Time, Action, Action_Datetime)
     VALUES (OLD.Payment_ID, OLD.Rental_ID, OLD.Payment_Amount, OLD.Payment_Date_Time, 'Update', NOW());
 	
@@ -332,11 +330,11 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `payment_AFTER_DELETE` AFTER DELETE ON `payment` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `payment_AFTER_DELETE` AFTER DELETE ON `payment` FOR EACH ROW BEGIN
 	INSERT INTO payment_history (Payment_ID, Rental_ID, Payment_Amount, Payment_Date_Time, Action, Action_Datetime)
     VALUES (OLD.Payment_ID, OLD.Rental_ID, OLD.Payment_Amount, OLD.Payment_Date_Time, 'Delete', NOW());
 END */;;
@@ -362,7 +360,7 @@ CREATE TABLE `payment_history` (
   `Action` varchar(45) DEFAULT NULL,
   `Action_Datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`History_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -371,7 +369,7 @@ CREATE TABLE `payment_history` (
 
 LOCK TABLES `payment_history` WRITE;
 /*!40000 ALTER TABLE `payment_history` DISABLE KEYS */;
-INSERT INTO `payment_history` VALUES (1,7,8,9000.00,'2023-07-19 14:47:51','Insert','2023-07-19 14:47:51'),(2,8,9,25000.00,'2023-07-21 03:44:39','Insert','2023-07-21 03:44:39'),(3,9,10,4500.00,'2023-07-21 04:18:31','Insert','2023-07-21 04:18:31'),(4,10,11,4500.00,'2023-07-21 04:19:22','Insert','2023-07-21 04:19:22'),(5,11,12,4500.00,'2023-07-21 04:19:59','Insert','2023-07-21 04:19:59'),(6,12,13,5500.00,'2023-07-21 04:21:47','Insert','2023-07-21 04:21:47'),(7,13,14,90000.00,'2023-07-21 04:30:13','Insert','2023-07-21 04:30:13'),(8,14,15,90000.00,'2023-07-21 04:31:07','Insert','2023-07-21 04:31:07'),(9,15,16,27500.00,'2023-07-21 04:38:34','Insert','2023-07-21 04:38:34'),(10,16,17,16500.00,'2023-07-21 04:40:45','Insert','2023-07-21 04:40:45'),(11,17,18,11000.00,'2023-07-21 19:20:23','Insert','2023-07-21 19:20:23'),(12,18,19,5000.00,'2023-07-21 19:22:20','Insert','2023-07-21 19:22:20'),(13,19,20,13500.00,'2023-07-21 19:32:57','Insert','2023-07-21 19:32:57');
+INSERT INTO `payment_history` VALUES (1,7,8,9000.00,'2023-07-19 14:47:51','Insert','2023-07-19 14:47:51'),(2,8,9,25000.00,'2023-07-21 03:44:39','Insert','2023-07-21 03:44:39'),(3,9,10,4500.00,'2023-07-21 04:18:31','Insert','2023-07-21 04:18:31'),(4,10,11,4500.00,'2023-07-21 04:19:22','Insert','2023-07-21 04:19:22'),(5,11,12,4500.00,'2023-07-21 04:19:59','Insert','2023-07-21 04:19:59'),(6,12,13,5500.00,'2023-07-21 04:21:47','Insert','2023-07-21 04:21:47'),(7,13,14,90000.00,'2023-07-21 04:30:13','Insert','2023-07-21 04:30:13'),(8,14,15,90000.00,'2023-07-21 04:31:07','Insert','2023-07-21 04:31:07'),(9,15,16,27500.00,'2023-07-21 04:38:34','Insert','2023-07-21 04:38:34'),(10,16,17,16500.00,'2023-07-21 04:40:45','Insert','2023-07-21 04:40:45'),(11,17,18,11000.00,'2023-07-21 19:20:23','Insert','2023-07-21 19:20:23'),(12,18,19,5000.00,'2023-07-21 19:22:20','Insert','2023-07-21 19:22:20'),(13,19,20,13500.00,'2023-07-21 19:32:57','Insert','2023-07-21 19:32:57'),(14,20,21,13500.00,'2023-07-22 06:11:23','Insert','2023-07-22 06:11:23'),(15,21,22,15000.00,'2023-07-22 06:24:43','Insert','2023-07-22 06:24:43'),(16,22,23,10000.00,'2023-07-22 06:26:51','Insert','2023-07-22 06:26:51');
 /*!40000 ALTER TABLE `payment_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -398,7 +396,7 @@ CREATE TABLE `rental` (
   KEY `FKK_Customer_ID_idx` (`Customer_ID`),
   CONSTRAINT `FK_Rental_Customer_ID` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`Customer_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_Rental_Van_ID` FOREIGN KEY (`Van_ID`) REFERENCES `van` (`Van_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -407,7 +405,7 @@ CREATE TABLE `rental` (
 
 LOCK TABLES `rental` WRITE;
 /*!40000 ALTER TABLE `rental` DISABLE KEYS */;
-INSERT INTO `rental` VALUES (2,2,6,'Ilocos Norte','SM Manila','2023-07-12','10:00:00','2023-07-15','10:00:00','Cancelled'),(5,2,6,'Bagaiso','aaeqweqew','2023-07-17','10:00:00','2023-07-20','10:00:00','Completed'),(6,6,7,'Morong, Bataan','PUP Manila','2023-07-25','05:00:00','2023-07-28','05:00:00','Pending'),(7,2,7,'Batangas','PUP Manila','2023-07-25','08:00:00','2023-07-27','08:00:00','Pending'),(8,6,6,'Baler','PUP Sta. Mesa','2023-07-06','04:00:00','2023-07-08','04:00:00','Completed'),(18,1,8,'Baguio','PUP Sta. Mesa','2023-07-06','21:19:00','2023-07-08','21:19:00','Cancelled'),(19,2,8,'Laguna','Luneta','2023-07-13','21:22:00','2023-07-14','21:22:00','Completed'),(20,1,8,'Bataan','Luneta','2023-06-26','13:32:00','2023-06-29','13:32:00','Completed');
+INSERT INTO `rental` VALUES (2,2,6,'Ilocos Norte','SM Manila','2023-07-12','10:00:00','2023-07-15','10:00:00','Cancelled'),(5,2,6,'Bagaiso','aaeqweqew','2023-07-17','10:00:00','2023-07-20','10:00:00','Completed'),(6,6,7,'Morong, Bataan','PUP Manila','2023-07-25','05:00:00','2023-07-28','05:00:00','Pending'),(7,2,7,'Batangas','PUP Manila','2023-07-25','08:00:00','2023-07-27','08:00:00','Pending'),(8,6,6,'Baler','PUP Sta. Mesa','2023-07-06','04:00:00','2023-07-08','04:00:00','Completed'),(18,1,8,'Baguio','PUP Sta. Mesa','2023-07-06','21:19:00','2023-07-08','21:19:00','Cancelled'),(19,2,8,'Laguna','Luneta','2023-07-13','21:22:00','2023-07-14','21:22:00','Completed'),(20,1,8,'Bataan','Luneta','2023-06-26','13:32:00','2023-06-29','13:32:00','Completed'),(21,6,6,'Baguio','PUP Sta. Mesa','2023-08-02','06:00:00','2023-08-05','06:00:00','Cancelled'),(22,2,8,'La Union','PUP Manila','2023-08-22','06:00:00','2023-08-25','06:00:00','Cancelled'),(23,2,8,'Bataan','PUP Manila','2023-08-17','06:00:00','2023-08-19','06:00:00','Cancelled');
 /*!40000 ALTER TABLE `rental` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -415,11 +413,11 @@ UNLOCK TABLES;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `rental_AFTER_INSERT` AFTER INSERT ON `rental` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `rental_AFTER_INSERT` AFTER INSERT ON `rental` FOR EACH ROW BEGIN
     
     INSERT INTO van_unavailable_date (Van_ID, Start_Date, End_Date, Status)
 	SELECT Van_ID, Pickup_Date, Return_Date, 'Booked'
@@ -446,7 +444,7 @@ CREATE TABLE `rental_without_driver` (
   `Return_Address` varchar(200) DEFAULT NULL,
   KEY `FK_WODriver_Rental_ID_idx` (`Rental_ID`),
   CONSTRAINT `FK_WODriver_Rental_ID` FOREIGN KEY (`Rental_ID`) REFERENCES `rental` (`Rental_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -455,7 +453,7 @@ CREATE TABLE `rental_without_driver` (
 
 LOCK TABLES `rental_without_driver` WRITE;
 /*!40000 ALTER TABLE `rental_without_driver` DISABLE KEYS */;
-INSERT INTO `rental_without_driver` VALUES (6,'PUP Manila'),(8,'PUP Sta. Mesa'),(19,'Luneta'),(20,'Luneta');
+INSERT INTO `rental_without_driver` VALUES (6,'PUP Manila'),(8,'PUP Sta. Mesa'),(19,'Luneta'),(20,'Luneta'),(21,'PUP Sta. Mesa'),(22,'PUP Manila'),(23,'PUP Manila');
 /*!40000 ALTER TABLE `rental_without_driver` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -475,7 +473,7 @@ CREATE TABLE `review` (
   PRIMARY KEY (`Review_ID`),
   KEY `FK_RentalID_idx` (`Rental_ID`),
   CONSTRAINT `FK_RentalID` FOREIGN KEY (`Rental_ID`) REFERENCES `rental` (`Rental_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -500,7 +498,7 @@ CREATE TABLE `review_photo` (
   `Review_Photo` varchar(2048) DEFAULT NULL,
   KEY `FK_Review_Photo_idx` (`Review_ID`),
   CONSTRAINT `FK_Review_Photo` FOREIGN KEY (`Review_ID`) REFERENCES `review` (`Review_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -525,7 +523,7 @@ CREATE TABLE `user` (
   `User_Type` varchar(8) DEFAULT NULL,
   `User_RegiDatetime` datetime DEFAULT NULL,
   UNIQUE KEY `User_Email_UNIQUE` (`User_Email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -555,7 +553,7 @@ CREATE TABLE `van` (
   `Owner_ID` int DEFAULT NULL,
   PRIMARY KEY (`Van_ID`),
   KEY `FK_Van_idx` (`Owner_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -581,7 +579,7 @@ CREATE TABLE `van_document` (
   `V_CR` varchar(2048) DEFAULT NULL,
   KEY `FK_Document_idx` (`Van_ID`),
   CONSTRAINT `FK_Document` FOREIGN KEY (`Van_ID`) REFERENCES `van` (`Van_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -606,7 +604,7 @@ CREATE TABLE `van_photo` (
   `V_Photo` varchar(2048) DEFAULT NULL,
   KEY `FK_V_Photo_idx` (`Van_ID`),
   CONSTRAINT `FK_V_Photo` FOREIGN KEY (`Van_ID`) REFERENCES `van` (`Van_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -631,7 +629,7 @@ CREATE TABLE `van_rate` (
   `V_Rate` decimal(20,2) DEFAULT NULL,
   KEY `FK_VanRate_Van_ID_idx` (`Van_ID`),
   CONSTRAINT `FK_VanRate_Van_ID` FOREIGN KEY (`Van_ID`) REFERENCES `van` (`Van_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -660,7 +658,7 @@ CREATE TABLE `van_unavailable_date` (
   PRIMARY KEY (`XDate_ID`),
   KEY `FK_Van_ID_idx` (`Van_ID`),
   CONSTRAINT `FK_Van_ID` FOREIGN KEY (`Van_ID`) REFERENCES `van` (`Van_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -669,7 +667,7 @@ CREATE TABLE `van_unavailable_date` (
 
 LOCK TABLES `van_unavailable_date` WRITE;
 /*!40000 ALTER TABLE `van_unavailable_date` DISABLE KEYS */;
-INSERT INTO `van_unavailable_date` VALUES (1,1,'2023-07-10','2023-07-14','Unavailable'),(2,1,'2023-07-18','2023-07-21','Unavailable'),(4,1,'2023-07-24','2023-07-26','Unavailable'),(11,2,'2023-07-17','2023-07-20','Completed'),(12,2,'2023-07-31','2023-08-02','Unavailable'),(13,6,'2023-07-25','2023-07-28','Booked'),(14,2,'2023-07-25','2023-07-27','Booked'),(15,6,'2023-07-06','2023-07-08','Booked'),(24,1,'2023-10-17','2023-10-22','Booked'),(25,1,'2023-09-12','2023-09-15','Booked'),(28,9,'2023-07-11','2023-07-13','Unavailable'),(29,9,'2023-07-19','2023-07-21','Unavailable'),(31,2,'2023-07-13','2023-07-14','Completed'),(32,1,'2023-06-26','2023-06-29','Completed');
+INSERT INTO `van_unavailable_date` VALUES (1,1,'2023-07-10','2023-07-14','Unavailable'),(2,1,'2023-07-18','2023-07-21','Unavailable'),(4,1,'2023-07-24','2023-07-26','Unavailable'),(11,2,'2023-07-17','2023-07-20','Completed'),(12,2,'2023-07-31','2023-08-02','Unavailable'),(13,6,'2023-07-25','2023-07-28','Booked'),(14,2,'2023-07-25','2023-07-27','Booked'),(24,1,'2023-10-17','2023-10-22','Booked'),(25,1,'2023-09-12','2023-09-15','Booked'),(28,9,'2023-07-11','2023-07-13','Unavailable'),(29,9,'2023-07-19','2023-07-21','Unavailable'),(31,2,'2023-07-13','2023-07-14','Completed'),(32,1,'2023-06-26','2023-06-29','Completed');
 /*!40000 ALTER TABLE `van_unavailable_date` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -686,7 +684,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -698,8 +696,7 @@ BEGIN
 	WHERE 
 		Van_ID = (SELECT Van_ID FROM rental WHERE Rental_ID = inRental_ID) 
 		AND Start_Date = (SELECT Pickup_Date FROM rental WHERE Rental_ID = inRental_ID)
-		AND End_Date = (SELECT Return_Date FROM rental WHERE Rental_ID = inRental_ID)
-        AND Status = 'Booked';
+		AND End_Date = (SELECT Return_Date FROM rental WHERE Rental_ID = inRental_ID);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -712,7 +709,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -743,4 +740,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-22  0:06:06
+-- Dump completed on 2023-07-22 12:20:30

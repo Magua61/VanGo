@@ -24,6 +24,12 @@ $rentalInsertSuccess = $stmt->execute();
 
 $rentalId = $stmt->insert_id; // Get the last inserted rental ID
 
+$dateStatus = 'Booked';
+$query = "   INSERT INTO van_unavailable_date (Van_ID, Start_Date, End_Date, Status) VALUES (?, ?, ?, ?)";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("isss", $vanId, $pickupDate, $returnDate, $dateStatus);
+$stmt->execute();
+
 // Insert rental without driver record if return address is provided
 if (!empty($returnAddress)) {
     $query = "INSERT INTO rental_without_driver (Rental_ID, Return_Address)
@@ -39,16 +45,28 @@ if (!empty($returnAddress)) {
 // Insert payment record
 date_default_timezone_set('Asia/Manila');
 $paymentDateTime = date('Y-m-d H:i:s'); // Current date and time
-$query = "INSERT INTO payment (Rental_ID, Payment_Amount, Payment_Date_Time)
-            VALUES (?, ?, ?)";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("ids", $rentalId, $totalPrice, $paymentDateTime);
 
-$paymentInsertSuccess = $stmt->execute();
+$queryPayment = "INSERT INTO payment (Rental_ID, Payment_Amount, Payment_Date_Time)
+                VALUES (?, ?, ?)";
+$stmtPayment = $conn->prepare($queryPayment);
+$stmtPayment->bind_param("ids", $rentalId, $totalPrice, $paymentDateTime);
+
+$stmtPayment->execute();
+
+// Get the last inserted Payment_ID
+$paymentId = $stmtPayment->insert_id;
+
+$queryPaymentHistory = "INSERT INTO payment_history (Payment_ID, Rental_ID, Payment_Amount, Payment_Date_Time, Action, Action_Datetime)
+                        VALUES (?, ?, ?, ?, 'Insert', NOW())";
+$stmtPaymentHistory = $conn->prepare($queryPaymentHistory);
+$stmtPaymentHistory->bind_param("iids", $paymentId, $rentalId, $totalPrice, $paymentDateTime);
+
+// Execute the second insert query
+$paymentHistoryInsertSuccess = $stmtPaymentHistory->execute();
 
 // Prepare the response
 $response = array();
-if ($rentalInsertSuccess && $rentalWithoutDriverInsertSuccess && $paymentInsertSuccess) {
+if ($rentalInsertSuccess && $rentalWithoutDriverInsertSuccess && $paymentHistoryInsertSuccess) {
     // All records inserted successfully
     $response['success'] = true;
     $response['message'] = "Records inserted successfully.";

@@ -5,9 +5,18 @@ require_once '../db_connect.php';
 // Retrieve the form data
 $rentalId = $_POST['rentalId'];
 
-$query = "CALL cancelRental(?)";
-$stmt = $conn->prepare($query);
+$updateSQL = "UPDATE rental SET Rental_Status = 'Cancelled' WHERE Rental_ID = ?";
+$stmt = $conn->prepare($updateSQL);
 $stmt->bind_param("i", $rentalId);
+$stmt->execute();
+
+$deleteSQL = "DELETE FROM van_unavailable_date 
+        WHERE 
+        Van_ID = (SELECT Van_ID FROM rental WHERE Rental_ID = ?) 
+        AND Start_Date = (SELECT Pickup_Date FROM rental WHERE Rental_ID = ?)
+        AND End_Date = (SELECT Return_Date FROM rental WHERE Rental_ID = ?)";
+$stmt = $conn->prepare($deleteSQL);
+$stmt->bind_param("iii", $rentalId, $rentalId, $rentalId);
 
 // Execute the statement to cancel the rental
 if ($stmt->execute()) {
