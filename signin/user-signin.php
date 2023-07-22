@@ -163,7 +163,7 @@ $conn->close();
                         <input type="password" name="password" class="form-control" placeholder="Password"/>
                       </div>
                       <div class="text-center pt-1 mb-4">
-                        <button class="btn fa-lg mb-3 action_btn" name="loginBtn" type="submit">Log in</button><br>
+                        <button class="btn mb-3 action_btn w-25" name="loginBtn" type="submit">Log in</button><br>
                       </div>
                     </form>
 
