@@ -2,6 +2,11 @@
 
 require_once 'db_connect.php';
 
+session_start();
+
+session_unset();
+session_destroy();
+
 $query = "SELECT V.Van_ID, V_Photo, concat_ws(' ', V_Make, V_Model, V_Capacity) as 'V_Name', V_Rate, COALESCE(FORMAT(AVG(Review_Rating), 1), 0.0) AS 'Average_Rating'
 			FROM van V LEFT JOIN van_photo VP
 				ON V.Van_ID = VP.Van_ID
@@ -67,25 +72,25 @@ $conn->close();
 	</nav>
     <!-- CAROUSEL / HOME -->
  
-	<div class="carousel slide" data-bs-ride="carousel" id="carouselExampleIndicators">
+		<div class="carousel slide" data-bs-ride="carousel" id="carouselExampleIndicators">
 		<div class="carousel-indicators">
 			<button aria-label="Slide 1" class="active" data-bs-slide-to="0" data-bs-target="#carouselExampleIndicators" type="button"></button> <button aria-label="Slide 2" data-bs-slide-to="1" data-bs-target="#carouselExampleIndicators" type="button"></button> <button aria-label="Slide 3" data-bs-slide-to="2" data-bs-target="#carouselExampleIndicators" type="button"></button>
 		</div>
 		<div class="carousel-inner">
 			<div class="carousel-item active" data-bs-interval="5000">
-				<img alt="..." class="d-block w-100" src="assets/image4.JPG">
+				<img alt="..." class="d-block w-100" src="assets/carimg1.jpg">
 				<div class="carousel-caption">
                     <h1>Van on the go! <br>Anytime, anywhere, wherever.</h1>
 				</div>
 			</div>
 			<div class="carousel-item" data-bs-interval="2000">
-				<img alt="..." class="d-block w-100" src="assets/image5.JPG">
+				<img alt="..." class="d-block w-100" src="assets/carimg2.jpg">
 				<div class="carousel-caption">
 					<h1>Explore the Philippines!</h1>
 				</div>
 			</div>
 			<div class="carousel-item">
-				<img alt="..." class="d-block w-100" src="assets/image2.JPG">
+				<img alt="..." class="d-block w-100" src="assets/carimg3.JPG">
 				<div class="carousel-caption">
 					<h1>Travel with your loved ones!</h1>
 				</div>

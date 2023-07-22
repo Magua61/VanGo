@@ -3,6 +3,11 @@
 require_once '../db_connect.php';
 session_start();
 
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+  header("Location: ../signin/user-signin.php");
+  exit;
+}
+
 $query = "SELECT * FROM customer WHERE C_Email = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $_SESSION['email']);

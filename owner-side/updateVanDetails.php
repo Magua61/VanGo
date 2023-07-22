@@ -3,6 +3,7 @@
 require_once '../db_connect.php';
 session_start();
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the form data
     
@@ -44,10 +45,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssssii", $plateNumber, $vanMake, $vanModel, $vanYear, $vanCapacity, $vanId);
     $stmt->execute();
                 
-    $query = "UPDATE van_rate SET V_Rate = ? WHERE Van_ID = ?";
+    $query = "SELECT V_Rate FROM van_rate WHERE Van_ID = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("di", $vanRate, $vanId);
+    $stmt->bind_param("i", $vanId);
     $stmt->execute();
+
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $query = "UPDATE van_rate SET V_Rate = ? WHERE Van_ID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("di", $vanRate, $vanId);
+        $stmt->execute();
+    } else {
+        $query = "INSERT INTO van_rate VALUES (?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("id", $vanId, $vanRate);
+        $stmt->execute();
+    }
 
     if (!empty($_FILES['vanPhoto']['name'])) {
         $query = "UPDATE van_photo SET V_Photo = ? WHERE Van_ID = ?";

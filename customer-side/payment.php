@@ -3,6 +3,11 @@
 require_once '../db_connect.php';
 session_start();
 
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: ../signin/user-signin.php");
+    exit;
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $vanId = $conn->real_escape_string($_POST['vanId']);

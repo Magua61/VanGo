@@ -2,6 +2,11 @@
 
 require_once '../db_connect.php';
 session_start();
+
+if (!isset($_SESSION['loggedin'])) {
+  header("Location: ../signin/user-signin.php");
+  exit;
+}
       
 $query = "SELECT * FROM van V JOIN owner O ON V.Owner_ID = O.Owner_ID WHERE O_Email = ?";
 $stmt = $conn->prepare($query);
