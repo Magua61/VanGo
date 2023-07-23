@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username_db = "root";
 $password_db = "";
-$dbname = "db_vango";
+$dbname = "if0_34662655_vango";
 
 $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 

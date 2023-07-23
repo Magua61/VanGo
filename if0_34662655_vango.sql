@@ -1,3 +1,8 @@
+-- Create the database if it doesn't exist
+CREATE DATABASE IF NOT EXISTS `if0_34662655_vango`;
+
+USE `if0_34662655_vango`;
+
 -- phpMyAdmin SQL Dump
 -- version 4.9.0.1
 -- https://www.phpmyadmin.net/
@@ -474,7 +479,7 @@ INSERT INTO `van_photo` (`Van_ID`, `V_Photo`) VALUES
 (2, '64ba3bafdd44f_64a7540de37aa_Toyota_Hiace_Super_Grandia.jpg'),
 (6, '64b46e3162d0b_nissan.jpg'),
 (9, '64ba65b2872a1_00000IMG_00000_BURST20200209175020789_COVER.jpg'),
-(11, '64bb952074015_hiacee.jpg');
+(11, '64bc754351762_hiace-not-superr.jpg');
 
 -- --------------------------------------------------------
 
